@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mysql://testConnection/test
+    username: root
+    password: testtest
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
