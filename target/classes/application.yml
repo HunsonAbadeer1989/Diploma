@@ -11,3 +11,11 @@ spring:
 spring.h2.console.enable: true
 spring.flyway.enabled: true
 spring.jpa.database-platform: org.hibernate.dialect.MySQL5Dialect
+
+general_blog:
+  title: DevPub
+  subtitle: RAZZGOVORCHIKI
+  phone: +7 903 666-44-55
+  email: mymail@gmail.com
+  copyright: Дмитрий Сергеев
+  copyrightFrom: 2005

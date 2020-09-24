@@ -7,16 +7,6 @@ drop table if exists tag2post;
 drop table if exists tags;
 drop table if exists users;
 
---drop table if exists `blog_db`.`captcha_codes`;
---drop table if exists `blog_db`.`flyway_schema_history`;
---drop table if exists `blog_db`.`global_settings`;
---drop table if exists `blog_db`.`post_comments`;
---drop table if exists `blog_db`.`posts`;
---drop table if exists `blog_db`.`post_votes`;
---drop table if exists `blog_db`.`tag2post`;
---drop table if exists `blog_db`.`tags`;
---drop table if exists `blog_db`.`users`;
-
 create table captcha_codes (
     id bigint not null auto_increment,
     code varchar(255),

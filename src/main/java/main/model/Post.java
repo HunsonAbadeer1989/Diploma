@@ -19,11 +19,12 @@ public class Post {
     @Column(name="moderation_status")
     private ModerationStatus moderationStatus;
 
-    @Column(name="moderator_id")
-    private long moderatorId;
+    @Column(name="moderator_id", nullable = true)
+    private Long moderatorId = null;
 
-    @Column(name="user_id")
-    private long userId;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
     @Column(name = "publication_time")
     private LocalDateTime publicationTime;
@@ -89,20 +90,20 @@ public class Post {
         this.moderationStatus = moderationStatus;
     }
 
-    public long getModeratorId() {
+    public Long getModeratorId() {
         return moderatorId;
     }
 
-    public void setModeratorId(long moderatorId) {
-        this.moderatorId = moderatorId;
+    public void setModeratorId(Long moderator) {
+        this.moderatorId = moderator;
     }
 
-    public long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDateTime getPublicationTime() {

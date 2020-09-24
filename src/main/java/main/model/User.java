@@ -2,6 +2,7 @@ package main.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,6 +39,29 @@ public class User {
 
     @OneToMany(mappedBy="user")
     private List<PostVotes> postVotes;
+
+    @OneToMany(mappedBy = "moderatorId")
+    private List<Post> postsModerated = new ArrayList<>();
+
+    public List<Post> getPostsModerated() {
+        return postsModerated;
+    }
+
+    public void setPostsModerated(List<Post> postsModerated) {
+        this.postsModerated = postsModerated;
+    }
+
+    //    @Column(name="posts")
+//    @OneToMany
+//    private List<Post> posts;
+//
+//    public List<Post> getPosts() {
+//        return posts;
+//    }
+//
+//    public void setPosts(List<Post> posts) {
+//        this.posts = posts;
+//    }
 
     public long getId() {
         return id;
