@@ -1,16 +1,19 @@
-package main.service;
+package main.service.impl;
 
 import main.api.request.EditProfileRequest;
 import main.api.response.ResponseApi;
-import main.service.interfaces.UserProfileRepoService;
+import main.service.UserProfileService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class UserProfileRepoServiceImpl implements UserProfileRepoService {
+@Service
+public class UserProfileServiceImpl implements UserProfileService {
 
     @Override
-    public ResponseEntity<ResponseApi> editMyProfile(EditProfileRequest editProfileRequest, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ResponseApi> editMyProfile(EditProfileRequest editProfileRequest,
+                                                     HttpServletRequest httpServletRequest) {
         return null;
     }
 

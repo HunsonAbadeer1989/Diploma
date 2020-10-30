@@ -1,11 +1,10 @@
-package main.service;
+package main.service.impl;
 
 import main.api.request.ChangePasswordRequest;
 import main.api.request.LoginRequest;
 import main.api.request.RegisterRequest;
 import main.api.response.ResponseApi;
-import main.model.repositories.AuthRepository;
-import main.service.interfaces.AuthRepoService;
+import main.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,10 +12,10 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
-public class AuthRepoServiceImpl implements AuthRepoService {
+public class AuthServiceImpl implements AuthService {
 
     @Autowired
-    private AuthRepository authRepository;
+    private AuthService authService;
 
     @Override
     public ResponseEntity<ResponseApi> loginUser(LoginRequest loginRequest) {

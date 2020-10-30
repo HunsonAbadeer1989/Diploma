@@ -1,4 +1,4 @@
-package main.service.interfaces;
+package main.service;
 
 import main.api.request.ModerationOfPostRequest;
 import main.api.request.VotesRequest;
@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 
-public interface PostRepoService {
+public interface PostService {
 
     ResponseEntity<ResponseApi> getPostsWithParams(int offset, int limit, String mode);
 

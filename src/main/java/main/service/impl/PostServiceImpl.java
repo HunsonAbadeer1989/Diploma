@@ -1,10 +1,9 @@
-package main.service;
+package main.service.impl;
 
 import main.api.request.ModerationOfPostRequest;
 import main.api.request.VotesRequest;
 import main.api.request.AddPostRequest;
-import main.model.repositories.PostRepository;
-import main.service.interfaces.PostRepoService;
+import main.service.PostService;
 import main.api.response.ResponseApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 
 @Service
-public class PostRepoServiceImpl implements PostRepoService {
+public class PostServiceImpl implements PostService {
 
     @Autowired
-    private PostRepository postRepository;
+    private PostService postService;
 
     @Override
     public ResponseEntity<ResponseApi> getPostsWithParams(int offset, int limit, String mode) {
