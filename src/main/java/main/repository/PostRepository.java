@@ -1,11 +1,9 @@
 package main.repository;
 
-import main.api.response.ResponseApi;
 import main.model.Post;
 import main.model.PostComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     @Query(value = "SELECT * FROM posts AS p WHERE p.is_active=1 " +
             "AND p.publication_time < NOW() " +
+            "AND p.moderation_status = 'ACCEPTED'" +
             "ORDER BY p.publication_time DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
         // RECENT POSTS
     List<Post> getRecentPosts(int offset, int limit);
@@ -22,16 +21,20 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query(value = "SELECT * FROM posts AS p " +
             "LEFT JOIN (SELECT post_id, SUM(value) AS sum_values FROM post_votes GROUP BY post_id) " +
             "AS sum_votes ON p.id=sum_votes.post_id WHERE p.is_active=1 AND p.publication_time < NOW() " +
+            "AND p.moderation_status = 'ACCEPTED'" +
             "ORDER BY sum_values DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
         // BEST POSTS
     List<Post> getBestPosts(int offset, int limit);
 
-    @Query(value = "SELECT * FROM posts AS p ORDER BY p.view_count DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM posts AS p WHERE p.moderation_status = 'ACCEPTED' " +
+            "ORDER BY p.view_count DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
         // POPULAR POSTS BY VIEWS
     List<Post> getPopularPosts(int offset, int limit);
 
     @Query(value = "SELECT * FROM posts AS p WHERE p.is_active=1 " +
-            "AND p.publication_time < NOW() DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
+            "AND p.publication_time < NOW()" +
+            "AND p.moderation_status = 'ACCEPTED'" +
+            " DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
         // EARLY POSTS
     List<Post> getEarlyPosts(int offset, int limit);
 
