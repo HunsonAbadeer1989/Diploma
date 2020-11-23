@@ -14,8 +14,8 @@ spring.jpa.database-platform: org.hibernate.dialect.MySQL5Dialect
 
 general_blog:
   title: DevPub
-  subtitle: RAZZGOVORCHIKI
-  phone: +7 903 666-44-55
-  email: mymail@gmail.com
-  copyright: Дмитрий Сергеев
-  copyrightFrom: 2005
+  subtitle: blogIT
+  phone: +7 926 050-71-71
+  email: egor.v.safonov@yandex.ru
+  copyright: Сафонов Егор
+  copyrightFrom: 2020

@@ -5,6 +5,7 @@ import main.api.request.LoginRequest;
 import main.api.request.RegisterRequest;
 import main.api.response.ResponseApi;
 import main.service.AuthService;
+import main.service.CaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,8 @@ public class ApiAuthController {
 
     @Autowired
     private AuthService authService;
+    @Autowired
+    private CaptchaService capthcaService;
 
     @PostMapping(value = "/login")
     public ResponseEntity<ResponseApi> loginUser(@RequestBody LoginRequest loginRequest){
@@ -46,7 +49,7 @@ public class ApiAuthController {
 
     @GetMapping(value=("/captcha"))
     public ResponseEntity<ResponseApi> generateCaptcha(){
-        return authService.generateCaptcha();
+        return capthcaService.generateCaptcha();
     }
 
     @GetMapping(value="/logout")

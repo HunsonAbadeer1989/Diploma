@@ -1,9 +1,11 @@
 package main.repository;
 
+import main.api.response.ResponseApi;
 import main.model.Post;
 import main.model.PostComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -60,4 +62,13 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "WHERE (t.name LIKE %?1%) ORDER BY p.time DESC LIMIT ?2 OFFSET ?3 ", nativeQuery = true)
         // GET POSTS BY TAG
     List<Post> getPostsByTag(String tag, int limit, int offset);
+
+    @Query(value = "SELECT * FROM posts AS p WHERE YEAR(p.publication_time) = ? ", nativeQuery = true)
+    List<Post> calenderOfPosts(Integer year);
+
+    @Query(value = "SELECT DISTINCT YEAR(p.publication_time) AS post_year " +
+            "FROM posts p ORDER BY post_year DESC", nativeQuery = true)
+    List<Integer> getYearsWithAnyPosts();
+
+
 }

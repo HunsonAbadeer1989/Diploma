@@ -4,13 +4,11 @@ import main.api.request.EditProfileRequest;
 import main.api.request.ModerationOfPostRequest;
 import main.api.response.InitResponse;
 import main.api.response.ResponseApi;
-import main.api.response.SettingsResponse;
-import main.service.SettingsService;
-import main.service.impl.UserProfileServiceImpl;
 import main.service.PostService;
 import main.service.TagService;
+import main.service.impl.SettingsServiceImpl;
+import main.service.impl.UserProfileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +21,7 @@ public class ApiGeneralController {
     @Autowired
     private final InitResponse initResponse;
     @Autowired
-    private final SettingsService settingsService;
+    private final SettingsServiceImpl settingsService;
     @Autowired
     private final TagService tagService;
     @Autowired
@@ -32,7 +30,7 @@ public class ApiGeneralController {
     private final UserProfileServiceImpl editUserProfileService;
 
     public ApiGeneralController(InitResponse initResponse,
-                                SettingsService settingsService,
+                                SettingsServiceImpl settingsService,
                                 TagService tagService,
                                 PostService postService,
                                 UserProfileServiceImpl editUserProfileService) {
@@ -49,8 +47,8 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/settings")
-    private ResponseEntity<SettingsResponse> settings() {
-        return new ResponseEntity<>(settingsService.getGlobalSettings(), HttpStatus.OK);
+    private ResponseEntity<?> settings() {
+        return settingsService.getGlobalSettings();
     }
 
     @GetMapping(value = ("/tag"), params = {"query"} )

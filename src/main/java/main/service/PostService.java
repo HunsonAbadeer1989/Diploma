@@ -4,7 +4,10 @@ import main.api.request.ModerationOfPostRequest;
 import main.api.request.VotesRequest;
 import main.api.request.AddPostRequest;
 import main.api.response.ResponseApi;
+import main.model.Post;
+import main.repository.PostRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;

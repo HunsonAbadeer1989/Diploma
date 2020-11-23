@@ -1,7 +1,6 @@
 package main.api.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import main.api.response.RequestApi;
 
 public class VotesRequest implements RequestApi {
     @JsonProperty("post_id")

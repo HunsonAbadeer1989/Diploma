@@ -19,7 +19,5 @@ public interface AuthService {
 
     ResponseEntity<ResponseApi> registerUser(RegisterRequest registerRequest);
 
-    ResponseEntity<ResponseApi> generateCaptcha();
-
     ResponseEntity<ResponseApi> logout(HttpServletRequest httpServletRequest);
 }

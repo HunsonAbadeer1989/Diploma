@@ -1,7 +1,5 @@
 package main.api.request;
 
-import main.api.response.RequestApi;
-
 public class EditProfileRequest implements RequestApi {
 
     private String photo;

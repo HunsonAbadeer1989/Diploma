@@ -1,4 +1,4 @@
-package main.api.response;
+package main.api.request;
 
 public interface RequestApi {
 }
