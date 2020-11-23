@@ -60,7 +60,7 @@ public class CaptchaServiceImpl implements CaptchaService {
         String secretCode = generateRandomString();
         Cage cage = getCage();
         String token = cage.getTokenGenerator().next();
-        if (token.length() > captchaPictureTextLength) { // Ограничиваем размер картинки капчи
+        if (token.length() > captchaPictureTextLength) {
             token = token.substring(0, captchaPictureTextLength);
         }
 
