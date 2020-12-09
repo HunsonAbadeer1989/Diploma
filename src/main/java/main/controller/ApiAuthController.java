@@ -23,8 +23,8 @@ public class ApiAuthController {
     private CaptchaService capthcaService;
 
     @PostMapping(value = "/login")
-    public ResponseEntity<ResponseApi> loginUser(@RequestBody LoginRequest loginRequest){
-        return  authService.loginUser(loginRequest);
+    public ResponseEntity<ResponseApi> loginUser(@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest){
+        return  authService.loginUser(loginRequest, httpServletRequest.getSession());
     }
 
     @GetMapping(value = "/check")

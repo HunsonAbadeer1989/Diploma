@@ -17,6 +17,18 @@ public class ApiPostController {
     @Autowired
     private PostService postService;
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ResponseApi> getPostById(@PathVariable(value = "id") long id){
+        return postService.getPostById(id);
+    }
+
+    @GetMapping(value = "/byTag", params = {"offset", "limit", "tag"})
+    public ResponseEntity<ResponseApi> searchPostsByTag(@RequestParam int offset,
+                                                        @RequestParam int limit,
+                                                        @RequestParam String tag){
+        return postService.getPostsByTag(offset, limit, tag);
+    }
+
     @GetMapping(params = {"offset", "limit", "mode"})
     public ResponseEntity<ResponseApi> getPosts(@RequestParam(value = "offset",
                                                               required = false,
@@ -41,13 +53,6 @@ public class ApiPostController {
         return postService.getPostsByDate(offset, limit, date);
     }
 
-    @GetMapping(value = "/byTag", params = {"offset", "limit", "tag"})
-    public ResponseEntity<ResponseApi> searchPostsByTag(@RequestParam int offset,
-                                                         @RequestParam int limit,
-                                                         @RequestParam String tag){
-        return postService.getPostsByTag(offset, limit, tag);
-    }
-
     @GetMapping(value = "/moderation", params = {"offset", "limit", "status"})
     public ResponseEntity<ResponseApi> getPostsForModeration(@RequestParam int offset,
                                                              @RequestParam int limit,
@@ -60,11 +65,6 @@ public class ApiPostController {
                                                   @RequestParam int limit,
                                                   @RequestParam String status){
         return postService.getMyPosts(offset, limit, status);
-    }
-
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<ResponseApi> getPostById(@PathVariable(value = "id") long id){
-        return postService.getPostById(id);
     }
 
     @GetMapping

@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class DocumentNotFoundResponse implements ResponseApi {
+public class NotFoundOrBadRequestResponse implements ResponseApi {
 
     private String message;
 
-    public DocumentNotFoundResponse(String message) {
+    public NotFoundOrBadRequestResponse(String message) {
         this.message = message;
     }
 }

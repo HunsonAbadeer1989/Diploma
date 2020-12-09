@@ -9,6 +9,7 @@ import main.service.TagService;
 import main.service.impl.SettingsServiceImpl;
 import main.service.impl.UserProfileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,13 +52,13 @@ public class ApiGeneralController {
         return settingsService.getGlobalSettings();
     }
 
-    @GetMapping(value = ("/tag"), params = {"query"} )
-    public ResponseEntity<ResponseApi> getTagList(@RequestParam String query) {
+    @GetMapping(value = ("/tag"), params = {"query"})
+    public ResponseEntity<ResponseApi> getTagList(@Param(value= "query") String query) {
         return tagService.getTagList(query);
     }
 
     @GetMapping(value = ("/tag"))
-    public ResponseEntity<ResponseApi> getTagList() {
+    public ResponseEntity<ResponseApi> getTagListWithoutQuery() {
         return tagService.getTagListWithoutQuery();
     }
 

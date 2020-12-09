@@ -5,13 +5,13 @@ import main.api.request.LoginRequest;
 import main.api.request.RegisterRequest;
 import main.api.response.ResponseApi;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public interface AuthService {
 
-    ResponseEntity<ResponseApi> loginUser(LoginRequest loginRequest);
+    ResponseEntity<ResponseApi> loginUser(LoginRequest loginRequest, HttpSession session);
 
     ResponseEntity<ResponseApi> restorePassword(String email);
 

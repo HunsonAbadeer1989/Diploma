@@ -1,4 +1,9 @@
 package main.api.response;
 
-public class LoginResponse {
+import main.model.User;
+
+public class LoginResponse implements ResponseApi {
+    public LoginResponse(User user, Object countPostsForModeration) {
+
+    }
 }

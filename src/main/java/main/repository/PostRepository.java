@@ -38,9 +38,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
         // EARLY POSTS
     List<Post> getEarlyPosts(int offset, int limit);
 
-    @Query(value = "SELECT * FROM posts AS p WHERE p.id=?1", nativeQuery = true)
-        // SELECT POST BY ID
-    Post getPostById(long id);
+    Post findById(long id);
 
     @Query(value = "SELECT COUNT(id) AS count FROM posts", nativeQuery = true)
         // COUNT ALL POSTS
@@ -61,17 +59,26 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     @Query(value = "SELECT DISTINCT * FROM posts AS p " +
             "INNER JOIN tag2post AS t2p ON p.id=t2p.post_id " +
-            "INNER JOIN tag AS t ON t.id=t2p.tag_id " +
-            "WHERE (t.name LIKE %?1%) ORDER BY p.time DESC LIMIT ?2 OFFSET ?3 ", nativeQuery = true)
+            "INNER JOIN tags AS t ON t.id=t2p.tag_id " +
+            "WHERE (t.name LIKE %?3%) " +
+            "AND p.is_active = 1 " +
+            "AND p.moderation_status = 'ACCEPTED' " +
+            "AND p.publication_time < NOW() " +
+            "ORDER BY p.publication_time DESC " +
+            "LIMIT ?2 OFFSET ?1 ", nativeQuery = true)
         // GET POSTS BY TAG
-    List<Post> getPostsByTag(String tag, int limit, int offset);
+    List<Post> getPostsByTag(int offset, int limit, String tag);
 
     @Query(value = "SELECT * FROM posts AS p WHERE YEAR(p.publication_time) = ? ", nativeQuery = true)
-    List<Post> calenderOfPosts(Integer year);
+    List<Post> calendarOfPosts(Integer year);
 
     @Query(value = "SELECT DISTINCT YEAR(p.publication_time) AS post_year " +
             "FROM posts p ORDER BY post_year DESC", nativeQuery = true)
     List<Integer> getYearsWithAnyPosts();
 
+    @Query(value = "SELECT COUNT(p.id) FROM posts p " +
+            "WHERE p.is_active = 1 " +
+            "AND p.moderation_status = 'NEW'", nativeQuery = true)
+    int countPostsForModeration();
 
 }
