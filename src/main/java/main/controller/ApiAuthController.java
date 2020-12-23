@@ -3,6 +3,7 @@ package main.controller;
 import main.api.request.ChangePasswordRequest;
 import main.api.request.LoginRequest;
 import main.api.request.RegisterRequest;
+import main.api.response.CheckResponse;
 import main.api.response.ResponseApi;
 import main.service.AuthService;
 import main.service.CaptchaService;
@@ -29,7 +30,7 @@ public class ApiAuthController {
 
     @GetMapping(value = "/check")
     public ResponseEntity<ResponseApi> checkUser(HttpSession session){
-        return null;
+        return ResponseEntity.ok(new CheckResponse());
     }
 
     @PostMapping(value = "/restore", params = {"email"})

@@ -1,6 +1,7 @@
 package main.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@EqualsAndHashCode(exclude = "tagsToPost")
 @Entity
 @Table(name = "posts")
 public class Post {
@@ -45,7 +47,7 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<PostComment> comments;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "tag2post",
             joinColumns = {@JoinColumn(name = "post_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")})

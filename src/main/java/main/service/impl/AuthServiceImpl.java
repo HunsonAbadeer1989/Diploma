@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<ResponseApi> loginUser(LoginRequest loginRequest, HttpSession session) {
-//        String email = loginRequest.getEmail();
+        String email = loginRequest.getEmail();
 //        String password = loginRequest.getPassword();
 //        User user = userRepository.getUserByEmail(email);
 //        if (user == null) {

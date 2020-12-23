@@ -52,7 +52,7 @@ public class TagServiceImpl implements TagService {
                 Double weight =  ((double) tagRepository.getTagCountByTagId(tag.getId()) / (double) mostFrequentTagCount);
                 queryTagsMap.put(tag.getName(), weight);
             }
-            return new ResponseEntity<>(new TagsResponse(queryTagsMap), HttpStatus.OK);
+            return new ResponseEntity<>(new TagsResponse(queryTagsMap ), HttpStatus.OK);
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }

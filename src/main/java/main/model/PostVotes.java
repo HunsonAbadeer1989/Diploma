@@ -22,10 +22,10 @@ public class PostVotes {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @Column
+    @Column(name = "time")
     private LocalDateTime time;
 
-    @Column
+    @Column(name = "value")
     private int value;
 
 }

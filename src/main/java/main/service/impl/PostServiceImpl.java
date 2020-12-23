@@ -8,6 +8,7 @@ import main.model.Post;
 import main.repository.PostRepository;
 import main.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,11 @@ import java.util.List;
 @Service
 public class PostServiceImpl implements PostService {
 
-    @Autowired
-    private PostRepository postRepository;
+    PostRepository postRepository;
+
+    public PostServiceImpl(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
     @Override
     public ResponseEntity<ResponseApi> getPostById(long id) {
@@ -51,7 +55,26 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ResponseEntity<ResponseApi> getPostsWithParams(int offset, int limit, String mode) {
-        return null;
+        ResponseApi listOfPosts;
+        switch(mode){
+            case("popular"):
+                listOfPosts = new PostListResponse(postRepository.getPopularPosts(offset, limit).size(),
+                        postRepository.getPopularPosts(offset, limit));
+                break;
+            case("best"):
+                listOfPosts = new PostListResponse(postRepository.getBestPosts(offset, limit).size(),
+                        postRepository.getBestPosts(offset, limit));
+                break;
+            case("early"):
+                listOfPosts = new PostListResponse(postRepository.getEarlyPosts(offset, limit).size(),
+                        postRepository.getEarlyPosts(offset, limit));
+                break;
+            default:
+                listOfPosts = new PostListResponse(postRepository.getRecentPosts(offset, limit).size(),
+                        postRepository.getRecentPosts(offset, limit));
+                break;
+        }
+        return new ResponseEntity<>(listOfPosts, HttpStatus.OK);
     }
 
     @Override

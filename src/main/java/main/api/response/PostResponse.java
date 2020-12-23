@@ -8,11 +8,11 @@ import main.model.PostAuthor;
 import main.model.PostComment;
 import main.model.TagToPost;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 @AllArgsConstructor
@@ -20,7 +20,7 @@ import java.util.Set;
 public class PostResponse implements ResponseApi {
 
     private long id;
-    private String timestamp;
+    private long timestamp;
     private boolean active;
     private PostAuthor user;
     private String title;
@@ -34,7 +34,7 @@ public class PostResponse implements ResponseApi {
 
     public PostResponse(Post post) {
         id = post.getId();
-        timestamp = getTimeToString(post.getPublicationTime());
+        timestamp = post.getPublicationTime().atZone(ZoneId.systemDefault()).toEpochSecond();
         user = new PostAuthor(post.getUser().getId(), post.getUser().getName());
         title = post.getTitle();
         text = post.getPostText();
@@ -48,7 +48,7 @@ public class PostResponse implements ResponseApi {
             String commentAuthorPhoto = c.getUser().getPhoto();
 
             long commentId = c.getId();
-            String commentTimestamp = getTimeToString(c.getTime());
+            long commentTimestamp = c.getTime().atZone(ZoneId.systemDefault()).toEpochSecond();
             String commentText = c.getText();
 
             Comment comment = new Comment(commentId, commentTimestamp, commentText,
@@ -57,14 +57,11 @@ public class PostResponse implements ResponseApi {
                             commentAuthorPhoto));
             commentsList.add(comment);
         }
+        tagsList = new TreeSet<>();
         for(TagToPost t : post.getTagsToPost()){
             String tagName = t.getTag().getName();
             tagsList.add(tagName);
         }
-    }
-
-    private String getTimeToString(LocalDateTime publicationTime) {
-        return publicationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm"));
     }
 
     @Data
@@ -72,7 +69,7 @@ public class PostResponse implements ResponseApi {
     static class Comment {
 
         private long id;
-        private String timestamp;
+        private long timestamp;
         private String text;
         private CommentAuthor user;
 

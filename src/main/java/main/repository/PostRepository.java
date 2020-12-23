@@ -13,7 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     @Query(value = "SELECT * FROM posts AS p WHERE p.is_active=1 " +
             "AND p.publication_time < NOW() " +
-            "AND p.moderation_status = 'ACCEPTED'" +
+            "AND p.moderation_status = 'ACCEPTED' " +
             "ORDER BY p.publication_time DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
         // RECENT POSTS
     List<Post> getRecentPosts(int offset, int limit);
@@ -21,20 +21,27 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query(value = "SELECT * FROM posts AS p " +
             "LEFT JOIN (SELECT post_id, SUM(value) AS sum_values FROM post_votes GROUP BY post_id) " +
             "AS sum_votes ON p.id=sum_votes.post_id WHERE p.is_active=1 AND p.publication_time < NOW() " +
-            "AND p.moderation_status = 'ACCEPTED'" +
-            "ORDER BY sum_values DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
+            "AND p.moderation_status = 'ACCEPTED' " +
+            "ORDER BY sum_values DESC, p.view_count DESC " +
+            "LIMIT ?2 OFFSET ?1", nativeQuery = true)
         // BEST POSTS
     List<Post> getBestPosts(int offset, int limit);
 
-    @Query(value = "SELECT * FROM posts AS p WHERE p.moderation_status = 'ACCEPTED' " +
-            "ORDER BY p.view_count DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
-        // POPULAR POSTS BY VIEWS
+    @Query(value = "SELECT * FROM posts AS p " +
+            "WHERE p.is_active=1 " +
+            "AND p.publication_time < NOW() " +
+            "AND p.moderation_status = 'ACCEPTED' " +
+            "ORDER BY (SELECT COUNT(*) FROM post_comments WHERE post_id=p.id) " +
+            "DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
+        // POPULAR POSTS BY COMMENTS
     List<Post> getPopularPosts(int offset, int limit);
 
-    @Query(value = "SELECT * FROM posts AS p WHERE p.is_active=1 " +
-            "AND p.publication_time < NOW()" +
-            "AND p.moderation_status = 'ACCEPTED'" +
-            " DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM posts AS p " +
+            "WHERE p.is_active=1 " +
+            "AND p.publication_time < NOW() " +
+            "AND p.moderation_status = 'ACCEPTED' " +
+            "ORDER BY p.publication_time " +
+            "ASC LIMIT ?2 OFFSET ?1", nativeQuery = true)
         // EARLY POSTS
     List<Post> getEarlyPosts(int offset, int limit);
 
