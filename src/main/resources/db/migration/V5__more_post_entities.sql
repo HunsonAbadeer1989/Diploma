@@ -1,6 +1,6 @@
-insert into users (is_moderator, reg_time, name, email)
-    values ( 0, NOW(), 'kirill', 'kirillemail@yandex.ru'),
-    ( 1, NOW(), 'goga', 'gogaemail@yandex.ru');
+insert into users (is_moderator, reg_time, name, email, password)
+    values ( 0, NOW(), 'kirill', 'kirillemail@yandex.ru', "$2y$12$9kYbkGnPHt.Ro0W.DuFbT.Hq2/Jp.8ZYj0ji/41w8828RVqvo5.Ni"),
+    ( 1, NOW(), 'goga', 'gogaemail@yandex.ru', "$2y$12$9kYbkGnPHt.Ro0W.DuFbT.Hq2/Jp.8ZYj0ji/41w8828RVqvo5.Ni");
 
 insert into posts (is_active, moderation_status, moderator_id, user_id, publication_time, title, text, view_count)
     values ( 1, 'ACCEPTED', 2, 1, ADDDATE(NOW(), INTERVAL -10 DAY), 'Hello world!', 'My first app in java IDE.', 5),

@@ -6,6 +6,8 @@ import main.api.request.AddPostRequest;
 import main.api.response.ResponseApi;
 import main.model.Post;
 import main.repository.PostRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +16,11 @@ import java.time.LocalDate;
 
 public interface PostService {
 
-    ResponseEntity<ResponseApi> getPostsWithParams(int offset, int limit, String mode);
+    ResponseEntity<ResponseApi> getPostsWithParams(String mode, Pageable page);
 
-    ResponseEntity<ResponseApi> getPostsByQuery(int offset, int limit, String query);
+    ResponseEntity<ResponseApi> getPostsByQuery(String query, Pageable page);
 
-    ResponseEntity<ResponseApi> getPostsByDate(int offset, int limit, LocalDate date);
+    ResponseEntity<ResponseApi> getPostsByDate(String date, Pageable page);
 
     ResponseEntity<ResponseApi> getPostsByTag(int offset, int limit, String tag);
 
@@ -39,4 +41,5 @@ public interface PostService {
     ResponseEntity<ResponseApi> moderationOfPost(ModerationOfPostRequest moderationOfPostRequest, HttpServletRequest httpServletRequest);
 
     ResponseEntity<ResponseApi> calendarOfPosts(Integer year);
+
 }

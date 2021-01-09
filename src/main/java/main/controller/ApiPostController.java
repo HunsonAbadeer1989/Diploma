@@ -5,10 +5,10 @@ import main.api.request.VotesRequest;
 import main.api.response.ResponseApi;
 import main.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/post")
@@ -17,40 +17,39 @@ public class ApiPostController {
     @Autowired
     private PostService postService;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ResponseApi> getPostById(@PathVariable(value = "id") long id){
         return postService.getPostById(id);
     }
 
-    @GetMapping(value = "/byTag", params = {"offset", "limit", "tag"})
-    public ResponseEntity<ResponseApi> searchPostsByTag(@RequestParam int offset,
-                                                        @RequestParam int limit,
+    @GetMapping(value = "/byTag")
+    public ResponseEntity<ResponseApi> searchPostsByTag(@RequestParam(defaultValue = "0") int offset,
+                                                        @RequestParam(defaultValue = "10") int limit,
                                                         @RequestParam String tag){
         return postService.getPostsByTag(offset, limit, tag);
     }
 
-    @GetMapping(params = {"offset", "limit", "mode"})
-    public ResponseEntity<ResponseApi> getPosts(@RequestParam(value = "offset",
-                                                              required = false,
-                                                              defaultValue = "0") int offset,
-                                                @RequestParam(value = "limit") int limit,
-                                                @RequestParam(value = "mode") String mode){
-
-        return postService.getPostsWithParams(offset, limit, mode);
+    @GetMapping(value="")
+    @PreAuthorize("hasAuthority('user:write')")
+    public ResponseEntity<ResponseApi> getPosts(@RequestParam(defaultValue = "0") int offset,
+                                                @RequestParam(defaultValue = "10") int limit,
+                                                @RequestParam(required = false) String mode) {
+        return postService.getPostsWithParams(mode, PageRequest.of(offset / limit, limit));
     }
 
-    @GetMapping(value = "/search", params = {"offset", "limit", "query"})
-    public ResponseEntity<ResponseApi> searchPostsByQuery(@RequestParam int offset,
-                                                   @RequestParam int limit,
-                                                   @RequestParam String query){
-        return postService.getPostsByQuery(offset, limit, query);
+    @GetMapping(value = "/search")
+    @PreAuthorize("hasAuthority('user:moderate')")
+    public ResponseEntity<ResponseApi> searchPostsByQuery(@RequestParam(defaultValue = "0") int offset,
+                                                          @RequestParam(defaultValue = "10") int limit,
+                                                          @RequestParam(required = false) String query){
+        return postService.getPostsByQuery(query, PageRequest.of(offset/limit, limit));
     }
 
     @GetMapping(value = "/byDate", params = {"offset", "limit", "date"})
     public ResponseEntity<ResponseApi> searchPostsByDate(@RequestParam int offset,
                                                           @RequestParam int limit,
-                                                          @RequestParam LocalDate date){
-        return postService.getPostsByDate(offset, limit, date);
+                                                          @RequestParam String date){
+        return postService.getPostsByDate(date, PageRequest.of(offset/limit, limit));
     }
 
     @GetMapping(value = "/moderation", params = {"offset", "limit", "status"})
@@ -65,13 +64,6 @@ public class ApiPostController {
                                                   @RequestParam int limit,
                                                   @RequestParam String status){
         return postService.getMyPosts(offset, limit, status);
-    }
-
-    @GetMapping
-    public ResponseEntity<ResponseApi> getPostsByTag(@RequestParam int offset,
-                                                     @RequestParam int limit,
-                                                     @RequestParam String tag){
-        return postService.getPostsByTag(offset, limit, tag);
     }
 
     @PostMapping

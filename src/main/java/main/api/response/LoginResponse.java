@@ -1,9 +1,11 @@
 package main.api.response;
 
-import main.model.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class LoginResponse implements ResponseApi {
-    public LoginResponse(User user, Object countPostsForModeration) {
-
-    }
+    private boolean result;
+    @JsonProperty("user")
+    private UserLoginResponse userLoginResponse;
 }

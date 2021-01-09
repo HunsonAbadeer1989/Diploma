@@ -7,8 +7,9 @@ import main.api.response.*;
 import main.model.Post;
 import main.repository.PostRepository;
 import main.service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,42 +50,60 @@ public class PostServiceImpl implements PostService {
         }
         List<Post> postsByTag = postRepository.getPostsByTag(offset, limit, tag);
         int count = postsByTag.size();
-        ResponseApi responseApi = new PostListResponse(count, (ArrayList<Post>) postsByTag);
+        ResponseApi responseApi = new PostListResponse(count, postsByTag);
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<ResponseApi> getPostsWithParams(int offset, int limit, String mode) {
-        ResponseApi listOfPosts;
-        switch(mode){
-            case("popular"):
-                listOfPosts = new PostListResponse(postRepository.getPopularPosts(offset, limit).size(),
-                        postRepository.getPopularPosts(offset, limit));
+    public ResponseEntity<ResponseApi> getPostsWithParams(String mode, Pageable pageable) {
+        Page<Post> pagePost = Page.empty();
+        if (mode != null) {
+            pagePost = findByMode(mode, pageable);
+            return createResponse(pagePost);
+        }
+        else{
+            return getAllPosts(postRepository.getAllPosts(pageable));
+        }
+    }
+
+    private Page<Post> findByMode(String mode, Pageable pageable) {
+        Page<Post> list = Page.empty();
+        switch (mode) {
+            case "best":
+                list = postRepository.getBestPosts(pageable);
                 break;
-            case("best"):
-                listOfPosts = new PostListResponse(postRepository.getBestPosts(offset, limit).size(),
-                        postRepository.getBestPosts(offset, limit));
+            case "recent":
+                list = postRepository.getRecentPosts(pageable);
                 break;
-            case("early"):
-                listOfPosts = new PostListResponse(postRepository.getEarlyPosts(offset, limit).size(),
-                        postRepository.getEarlyPosts(offset, limit));
+            case "popular":
+                list = postRepository.getPopularPosts(pageable);
                 break;
             default:
-                listOfPosts = new PostListResponse(postRepository.getRecentPosts(offset, limit).size(),
-                        postRepository.getRecentPosts(offset, limit));
+                list = postRepository.getEarlyPosts(pageable);
                 break;
         }
-        return new ResponseEntity<>(listOfPosts, HttpStatus.OK);
+        return list;
     }
 
     @Override
-    public ResponseEntity<ResponseApi> getPostsByQuery(int offset, int limit, String query) {
-        return null;
+    public ResponseEntity<ResponseApi> getPostsByQuery(String query, Pageable page) {
+        Page<Post> pagePost = Page.empty();
+        if(query != null) {
+            pagePost = postRepository.getPostsByQuery(query, page);
+            return createResponse(pagePost);
+        }
+        else{
+            return getAllPosts(postRepository.getAllPosts(page));
+        }
     }
 
     @Override
-    public ResponseEntity<ResponseApi> getPostsByDate(int offset, int limit, LocalDate date) {
-        return null;
+    public ResponseEntity<ResponseApi> getPostsByDate(String date, Pageable page) {
+        Page<Post> pagePost = Page.empty();
+        if (date != null) {
+            pagePost = postRepository.getPostsByDate(date, page);
+        }
+        PostListResponse response = new PostListResponse((int) pagePost.getTotalElements(), pagePost.toList());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
@@ -135,6 +154,19 @@ public class PostServiceImpl implements PostService {
         }
         List<Integer> allYears = postRepository.getYearsWithAnyPosts();
         return new ResponseEntity<>(new PostsCalendarResponse(allYears, postsCountByDate), HttpStatus.OK);
+    }
+
+    private ResponseEntity<ResponseApi> createResponse(Page<Post> page){
+        List<Post> posts = page.getContent();
+        List<Post> postsList = new ArrayList<>(posts);
+        ResponseApi listResponse = new PostListResponse((int) page.getTotalElements(), postsList);
+        return new ResponseEntity<>(listResponse, HttpStatus.OK);
+    }
+
+    private ResponseEntity<ResponseApi> getAllPosts(Page<Post> allPosts) {
+        List<Post> posts = allPosts.getContent();
+        ResponseApi listResponse = new PostListResponse((int) allPosts.getTotalElements(), new ArrayList<>(posts));
+        return new ResponseEntity<>(listResponse, HttpStatus.OK);
     }
 
 

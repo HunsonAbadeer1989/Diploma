@@ -1,22 +1,17 @@
 package main.api.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import main.model.Tag;
 
 import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TagRequest implements RequestApi {
 
     private List<Tag> tags;
 
-    public TagRequest(List<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
 }

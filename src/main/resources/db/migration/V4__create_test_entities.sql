@@ -1,6 +1,6 @@
-insert into users (is_moderator, reg_time, name, email)
-    values ( 0, NOW(), 'ivan', 'ivanemail@yandex.ru'),
-    ( 1, NOW(), 'eugene', 'eugeneemail@yandex.ru');
+insert into users (is_moderator, reg_time, name, email, password)
+    values ( 0, NOW(), 'ivan', 'ivanemail@yandex.ru', "$2y$12$9kYbkGnPHt.Ro0W.DuFbT.Hq2/Jp.8ZYj0ji/41w8828RVqvo5.Ni"),
+    ( 1, NOW(), 'eugene', 'eugeneemail@yandex.ru', "$2y$12$9kYbkGnPHt.Ro0W.DuFbT.Hq2/Jp.8ZYj0ji/41w8828RVqvo5.Ni");
 
 insert into posts (is_active, moderation_status, moderator_id, user_id, publication_time, title, text, view_count)
     values ( 1, 'ACCEPTED', (SELECT id FROM users WHERE is_moderator like 1),

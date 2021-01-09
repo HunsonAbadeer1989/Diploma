@@ -1,6 +1,7 @@
 package main.model;
 
 import lombok.Data;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -37,6 +38,10 @@ public class User {
     private List<PostVotes> postVotes;
     @OneToMany(mappedBy = "moderatorId")
     private List<Post> postsModerated = new ArrayList<>();
+
+    public Role getRole(){
+        return isModerator == 1 ? Role.MODERATOR : Role.USER;
+    }
 
     @Override
     public String toString() {

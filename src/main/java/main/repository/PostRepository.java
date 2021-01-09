@@ -2,48 +2,56 @@ package main.repository;
 
 import main.model.Post;
 import main.model.PostComment;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Integer> {
+public interface PostRepository extends PagingAndSortingRepository<Post, Integer> {
+
+    @Query(value = "SELECT * FROM posts AS p WHERE p.is_active=1 " +
+            "AND p.publication_time < NOW() " +
+            "AND p.moderation_status = 'ACCEPTED' " , nativeQuery = true)
+        // All POSTS
+    Page<Post> getAllPosts(Pageable page);
 
     @Query(value = "SELECT * FROM posts AS p WHERE p.is_active=1 " +
             "AND p.publication_time < NOW() " +
             "AND p.moderation_status = 'ACCEPTED' " +
-            "ORDER BY p.publication_time DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
+            "ORDER BY p.publication_time DESC " , nativeQuery = true)
         // RECENT POSTS
-    List<Post> getRecentPosts(int offset, int limit);
+    Page<Post> getRecentPosts(Pageable page);
 
     @Query(value = "SELECT * FROM posts AS p " +
-            "LEFT JOIN (SELECT post_id, SUM(value) AS sum_values FROM post_votes GROUP BY post_id) " +
-            "AS sum_votes ON p.id=sum_votes.post_id WHERE p.is_active=1 AND p.publication_time < NOW() " +
+            "LEFT JOIN (SELECT post_id, SUM(value) AS sum_values " +
+            "FROM post_votes GROUP BY post_id) " +
+            "AS sum_votes ON p.id=sum_votes.post_id WHERE p.is_active=1 " +
+            "AND p.publication_time < NOW() " +
             "AND p.moderation_status = 'ACCEPTED' " +
-            "ORDER BY sum_values DESC, p.view_count DESC " +
-            "LIMIT ?2 OFFSET ?1", nativeQuery = true)
+            "ORDER BY sum_values DESC, p.view_count DESC ", nativeQuery = true)
         // BEST POSTS
-    List<Post> getBestPosts(int offset, int limit);
+    Page<Post> getBestPosts(Pageable page);
 
     @Query(value = "SELECT * FROM posts AS p " +
             "WHERE p.is_active=1 " +
             "AND p.publication_time < NOW() " +
             "AND p.moderation_status = 'ACCEPTED' " +
-            "ORDER BY (SELECT COUNT(*) FROM post_comments WHERE post_id=p.id) " +
-            "DESC LIMIT ?2 OFFSET ?1", nativeQuery = true)
+            "ORDER BY (SELECT COUNT(*) FROM post_comments " +
+            "WHERE post_id=p.id) DESC ", nativeQuery = true)
         // POPULAR POSTS BY COMMENTS
-    List<Post> getPopularPosts(int offset, int limit);
+    Page<Post> getPopularPosts(Pageable page);
 
     @Query(value = "SELECT * FROM posts AS p " +
             "WHERE p.is_active=1 " +
             "AND p.publication_time < NOW() " +
             "AND p.moderation_status = 'ACCEPTED' " +
-            "ORDER BY p.publication_time " +
-            "ASC LIMIT ?2 OFFSET ?1", nativeQuery = true)
+            "ORDER BY p.publication_time ASC", nativeQuery = true)
         // EARLY POSTS
-    List<Post> getEarlyPosts(int offset, int limit);
+    Page<Post> getEarlyPosts(Pageable page);
 
     Post findById(long id);
 
@@ -53,9 +61,9 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     @Query(value = "SELECT * FROM posts AS p " +
             "WHERE DATEDIFF(p.publication_time, ?1) = 0 AND p.is_active = 1 " +
-            "ORDER BY p.publication_time DESC LIMIT ?2 OFFSET ?3", nativeQuery = true)
+            "ORDER BY p.publication_time DESC", nativeQuery = true)
         // SEARCH BY DATE
-    List<Post> getPostsByDate(String date, int limit, int offset);
+    Page<Post> getPostsByDate(String date, Pageable page);
 
 
     @Query(value = "SELECT * FROM posts AS p " +
@@ -88,4 +96,10 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "AND p.moderation_status = 'NEW'", nativeQuery = true)
     int countPostsForModeration();
 
+    @Query(value ="SELECT * FROM posts AS p " +
+            "WHERE p.publication_time < NOW() " +
+            "AND p.is_active = 1 " +
+            "AND p.moderation_status = 'ACCEPTED' " +
+            "AND (p.text LIKE %?1% OR title LIKE %?1%)", nativeQuery = true)
+    Page<Post> getPostsByQuery(String query, Pageable page);
 }
