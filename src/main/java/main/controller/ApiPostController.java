@@ -30,10 +30,9 @@ public class ApiPostController {
     }
 
     @GetMapping(value="")
-    @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<ResponseApi> getPosts(@RequestParam(defaultValue = "0") int offset,
                                                 @RequestParam(defaultValue = "10") int limit,
-                                                @RequestParam(required = false) String mode) {
+                                                @RequestParam(required = false, defaultValue = "recent") String mode) {
         return postService.getPostsWithParams(mode, PageRequest.of(offset / limit, limit));
     }
 

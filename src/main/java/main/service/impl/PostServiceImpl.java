@@ -55,14 +55,7 @@ public class PostServiceImpl implements PostService {
     }
 
     public ResponseEntity<ResponseApi> getPostsWithParams(String mode, Pageable pageable) {
-        Page<Post> pagePost = Page.empty();
-        if (mode != null) {
-            pagePost = findByMode(mode, pageable);
-            return createResponse(pagePost);
-        }
-        else{
-            return getAllPosts(postRepository.getAllPosts(pageable));
-        }
+        return createResponse(findByMode(mode, pageable));
     }
 
     private Page<Post> findByMode(String mode, Pageable pageable) {
@@ -87,11 +80,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<ResponseApi> getPostsByQuery(String query, Pageable page) {
         Page<Post> pagePost = Page.empty();
-        if(query != null) {
+        if (query != null) {
             pagePost = postRepository.getPostsByQuery(query, page);
             return createResponse(pagePost);
-        }
-        else{
+        } else {
             return getAllPosts(postRepository.getAllPosts(page));
         }
     }
@@ -156,7 +148,7 @@ public class PostServiceImpl implements PostService {
         return new ResponseEntity<>(new PostsCalendarResponse(allYears, postsCountByDate), HttpStatus.OK);
     }
 
-    private ResponseEntity<ResponseApi> createResponse(Page<Post> page){
+    private ResponseEntity<ResponseApi> createResponse(Page<Post> page) {
         List<Post> posts = page.getContent();
         List<Post> postsList = new ArrayList<>(posts);
         ResponseApi listResponse = new PostListResponse((int) page.getTotalElements(), postsList);

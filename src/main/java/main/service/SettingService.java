@@ -1,9 +1,7 @@
 package main.service;
 
-import main.model.GlobalSettings;
+import main.api.response.ResponseApi;
 import org.springframework.http.ResponseEntity;
-
-import java.util.HashSet;
 
 public interface SettingService {
 
@@ -11,5 +9,5 @@ public interface SettingService {
     String POST_PREMODERATION = "POST_PREMODERATION";
     String STATISTICS_IS_PUBLIC = "STATISTICS_IS_PUBLIC";
 
-    ResponseEntity<?> getGlobalSettings();
+    ResponseEntity<ResponseApi> getGlobalSettings();
 }

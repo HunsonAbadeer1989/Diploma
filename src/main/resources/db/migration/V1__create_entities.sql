@@ -1,12 +1,3 @@
-drop table if exists captcha_codes;
-drop table if exists global_settings;
-drop table if exists post_comments;
-drop table if exists post_votes;
-drop table if exists posts;
-drop table if exists tag2post;
-drop table if exists tags;
-drop table if exists users;
-
 create table captcha_codes (
     id bigint not null auto_increment,
     code varchar(255),

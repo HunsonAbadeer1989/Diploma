@@ -28,7 +28,7 @@ public class PostResponse implements ResponseApi {
     private int likeCount;
     private int dislikeCount;
     private int viewCount;
-    private List<Comment> commentsList;
+    private List<Comment> comments;
     private Set<String> tagsList;
 
 
@@ -41,21 +41,21 @@ public class PostResponse implements ResponseApi {
         likeCount = (int) post.getVotes().stream().filter(v -> v.getValue() == 1).count();
         dislikeCount = (int) post.getVotes().stream().filter(v -> v.getValue() == -1).count();
         viewCount = post.getViewCount();
-        commentsList = new LinkedList<>();
-        for (PostComment c : post.getComments()) {
-            long commentAuthorId = c.getUser().getId();
-            String commentAuthorName = c.getUser().getName();
-            String commentAuthorPhoto = c.getUser().getPhoto();
+        comments = new LinkedList<>();
+        for (PostComment pc : post.getComments()) {
+            long commentAuthorId = pc.getUser().getId();
+            String commentAuthorName = pc.getUser().getName();
+            String commentAuthorPhoto = pc.getUser().getPhoto();
 
-            long commentId = c.getId();
-            long commentTimestamp = c.getTime().atZone(ZoneId.systemDefault()).toEpochSecond();
-            String commentText = c.getText();
+            long commentId = pc.getId();
+            long commentTimestamp = pc.getTime().atZone(ZoneId.systemDefault()).toEpochSecond();
+            String commentText = pc.getText();
 
             Comment comment = new Comment(commentId, commentTimestamp, commentText,
                     new Comment.CommentAuthor(commentAuthorId,
                             commentAuthorName,
                             commentAuthorPhoto));
-            commentsList.add(comment);
+            comments.add(comment);
         }
         tagsList = new TreeSet<>();
         for(TagToPost t : post.getTagsToPost()){

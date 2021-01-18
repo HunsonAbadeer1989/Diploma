@@ -3,7 +3,6 @@ package main.controller;
 import main.api.request.ChangePasswordRequest;
 import main.api.request.LoginRequest;
 import main.api.request.RegisterRequest;
-import main.api.response.CheckResponse;
 import main.api.response.LoginResponse;
 import main.api.response.ResponseApi;
 import main.api.response.UserLoginResponse;
@@ -22,7 +21,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.security.Principal;
 
 @RestController
