@@ -168,6 +168,7 @@ public class AuthServiceImpl implements AuthService {
         newUser.setPassword(encodePassword);
         newUser.setName(registerRequest.getName());
         newUser.setRegTime(LocalDateTime.now());
+        userRepository.save(newUser);
 
         return new RegisterResponse(true);
     }
