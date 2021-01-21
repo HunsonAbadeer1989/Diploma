@@ -12,7 +12,7 @@ public class ChangePasswordRequest implements RequestApi {
 
     private String code;
     private String password;
-    private String capthca;
+    private String captcha;
     @JsonProperty(value="captcha_secret")
     private String captchaSecret;
 

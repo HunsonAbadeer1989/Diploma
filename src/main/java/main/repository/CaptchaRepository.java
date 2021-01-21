@@ -16,7 +16,7 @@ public interface CaptchaRepository extends JpaRepository<CaptchaCode, Integer> {
     @Modifying
     @Query(value = "DELETE FROM captcha_codes " +
             "WHERE time < ?", nativeQuery = true)
-    void deleteOldCaptchas(LocalDateTime captchaDeletedBeforeTime);
+    void deleteOldCaptches(LocalDateTime captchaDeletedBeforeTime);
 
     @Query(value = "SELECT * FROM captcha_codes c" +
             " WHERE c.secret_code = ?", nativeQuery = true)

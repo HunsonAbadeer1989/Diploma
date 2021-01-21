@@ -57,7 +57,7 @@ public class CaptchaServiceImpl implements CaptchaService {
     @Override
     public ResponseEntity<ResponseApi> generateCaptcha() {
         LocalDateTime captchaDeleteBeforeTime = LocalDateTime.now().minusMinutes(oldCaptchaDeleteTimeInMin);
-        captchaRepository.deleteOldCaptchas(captchaDeleteBeforeTime);
+        captchaRepository.deleteOldCaptches(captchaDeleteBeforeTime);
 
         String secretCode = generateRandomString();
         Cage cage = getCage();

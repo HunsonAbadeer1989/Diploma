@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 public interface AuthService {
 
-    ResponseEntity<ResponseApi> loginUser(LoginRequest loginRequest, HttpSession session);
+    ResponseEntity<ResponseApi> loginUser(LoginRequest loginRequest);
 
     ResponseEntity<ResponseApi> restorePassword(String email);
 

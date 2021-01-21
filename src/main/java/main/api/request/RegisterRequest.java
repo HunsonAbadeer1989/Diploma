@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import main.api.response.ResponseApi;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest implements ResponseApi {
 

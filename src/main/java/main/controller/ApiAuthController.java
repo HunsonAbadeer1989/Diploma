@@ -1,5 +1,6 @@
 package main.controller;
 
+import com.sun.istack.NotNull;
 import main.api.request.ChangePasswordRequest;
 import main.api.request.LoginRequest;
 import main.api.request.RegisterRequest;
@@ -27,7 +28,6 @@ import java.security.Principal;
 @RequestMapping("/api/auth")
 public class ApiAuthController {
 
-    public final AuthenticationManager authenticationManager;
     public final UserRepository userRepository;
 
     @Autowired
@@ -35,38 +35,13 @@ public class ApiAuthController {
     @Autowired
     private CaptchaService capthcaService;
 
-    public ApiAuthController(AuthenticationManager authenticationManager, UserRepository userRepository) {
-        this.authenticationManager = authenticationManager;
+    public ApiAuthController( UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @PostMapping("/login")
     public ResponseEntity<ResponseApi> loginUser(@RequestBody LoginRequest loginRequest) {
-        Authentication auth;
-
-        try {
-            auth = authenticationManager
-                    .authenticate(
-                            new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
-                                    loginRequest.getPassword()));
-        }
-        catch (AuthenticationException e){
-            LoginResponse loginResponse = new LoginResponse();
-            loginResponse.setResult(true);
-            return ResponseEntity.ok(loginResponse);
-        }
-
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        User user = (User) auth.getPrincipal();
-        return ResponseEntity.ok(getLoginResponse(user.getUsername()));
-    }
-
-    @GetMapping(value = "/check")
-    public ResponseEntity<ResponseApi> check(Principal principal) {
-        if(principal == null){
-            return ResponseEntity.ok(new LoginResponse());
-        }
-        return ResponseEntity.ok(getLoginResponse(principal.getName()));
+        return authService.loginUser(loginRequest);
     }
 
     @PostMapping(value = "/restore", params = {"email"})
@@ -75,12 +50,12 @@ public class ApiAuthController {
     }
 
     @PostMapping(value = "/password")
-    public ResponseEntity<ResponseApi> changePassword(ChangePasswordRequest changePasswordRequest) {
+    public ResponseEntity<ResponseApi> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
         return authService.changePassword(changePasswordRequest);
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<ResponseApi> registerUser(RegisterRequest registerRequest) {
+    public ResponseEntity<ResponseApi> registerUser(@NotNull @RequestBody RegisterRequest registerRequest) {
         return authService.registerUser(registerRequest);
     }
 
@@ -94,20 +69,5 @@ public class ApiAuthController {
         return authService.logout(httpServletRequest);
     }
 
-    private LoginResponse getLoginResponse(String email) {
-        main.model.User currentUser = userRepository
-                .findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(email));
 
-        UserLoginResponse userLoginResponse = new UserLoginResponse();
-        userLoginResponse.setName(currentUser.getName());
-        userLoginResponse.setEmail(currentUser.getEmail());
-        userLoginResponse.setModeration(currentUser.getIsModerator() == 1);
-        userLoginResponse.setId(currentUser.getId());
-
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setResult(true);
-        loginResponse.setUserLoginResponse(userLoginResponse);
-        return loginResponse;
-    }
 }
