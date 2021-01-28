@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AddPostRequest implements RequestApi {
 
-    private LocalDateTime timestamp;
+    private long timestamp;
     private int active;
     private String title;
     private List<Tag> tags;

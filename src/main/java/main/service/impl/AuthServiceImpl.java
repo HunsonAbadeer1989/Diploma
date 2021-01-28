@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,30 +56,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<ResponseApi> loginUser(LoginRequest loginRequest) {
-        Authentication auth;
+        main.model.User loginUser = userRepository.findByEmail(loginRequest.getEmail());
 
-        try {
-            auth = authenticationManager
-                    .authenticate(
-                            new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
-                                    loginRequest.getPassword()));
-        } catch (AuthenticationException e) {
+        if (loginUser == null) {
             LoginResponse loginResponse = new LoginResponse();
-            loginResponse.setResult(true);
+            loginResponse.setResult(false);
             return ResponseEntity.ok(loginResponse);
         }
+
+        Authentication auth = authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
+                                loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(auth);
         User user = (User) auth.getPrincipal();
         return ResponseEntity.ok(getLoginResponse(user.getUsername()));
-    }
-
-    @GetMapping(value = "/check")
-    public ResponseEntity<ResponseApi> check(Principal principal) {
-        if (principal == null) {
-            return ResponseEntity.ok(new LoginResponse());
-        }
-        return ResponseEntity.ok(getLoginResponse(principal.getName()));
     }
 
     @Override
@@ -92,11 +85,19 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public ResponseEntity<ResponseApi> check(Principal principal){
+        if (principal == null) {
+            return ResponseEntity.ok(new LoginResponse());
+        }
+        return ResponseEntity.ok(getLoginResponse(principal.getName()));
+    }
+
+    @Override
     public ResponseEntity<ResponseApi> registerUser(RegisterRequest registerRequest) {
         RegisterResponse registerResponse = checkRegisterRequestData(registerRequest);
 
         if (!registerResponse.isResult()) {
-            return new ResponseEntity<>(registerResponse, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(registerResponse, HttpStatus.OK);
         }
         registerResponse = saveNewUser(registerRequest);
 
@@ -109,12 +110,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private LoginResponse getLoginResponse(String email) {
-        main.model.User currentUser = userRepository.findByEmail(email);
+        main.model.User currentUser = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
         UserLoginResponse userLoginResponse = new UserLoginResponse();
         userLoginResponse.setName(currentUser.getName());
         userLoginResponse.setEmail(currentUser.getEmail());
+        userLoginResponse.setPhoto(currentUser.getPhoto());
         userLoginResponse.setModeration(currentUser.getIsModerator() == 1);
         userLoginResponse.setId(currentUser.getId());
+        userLoginResponse.setSettings(currentUser.getIsModerator() == 1);
+        userLoginResponse.setModerationCount(email, postRepository);
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setResult(true);
@@ -130,19 +135,19 @@ public class AuthServiceImpl implements AuthService {
         String emailFromRequest = registerRequest.getEmail();
         main.model.User userByEmailFromRequest = userRepository.findByEmail(emailFromRequest);
 
-        if(userByEmailFromRequest != null){
+        if (userByEmailFromRequest != null) {
             registerResponse.setResult(false);
             errors.put("email", "Этот e-mail " + emailFromRequest + " уже зарегистрирован.");
         }
 
         String nameFromRequest = registerRequest.getName();
-        if(nameFromRequest.isEmpty()){
+        if (nameFromRequest.isEmpty()) {
             registerResponse.setResult(false);
             errors.put("name", "Имя " + nameFromRequest + "  указано неверно.");
         }
 
         String passwordFromRequest = registerRequest.getPassword();
-        if(passwordFromRequest != null && passwordFromRequest.length() < 6 ){
+        if (passwordFromRequest != null && passwordFromRequest.length() < 6) {
             registerResponse.setResult(false);
             errors.put("password", "Пароль короче 6-ти символов");
         }

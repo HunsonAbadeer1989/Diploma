@@ -1,9 +1,12 @@
 package main.controller;
 
+import com.sun.istack.NotNull;
+import main.api.request.CommentRequest;
 import main.api.request.EditProfileRequest;
 import main.api.request.ModerationOfPostRequest;
 import main.api.response.InitResponse;
 import main.api.response.ResponseApi;
+import main.service.CommentService;
 import main.service.PostService;
 import main.service.TagService;
 import main.service.impl.SettingsServiceImpl;
@@ -14,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api")
@@ -29,17 +33,20 @@ public class ApiGeneralController {
     private final PostService postService;
     @Autowired
     private final UserProfileServiceImpl editUserProfileService;
+    @Autowired
+    private final CommentService commentService;
 
     public ApiGeneralController(InitResponse initResponse,
                                 SettingsServiceImpl settingsService,
                                 TagService tagService,
                                 PostService postService,
-                                UserProfileServiceImpl editUserProfileService) {
+                                UserProfileServiceImpl editUserProfileService, CommentService commentService) {
         this.initResponse = initResponse;
         this.settingsService = settingsService;
         this.tagService = tagService;
         this.postService = postService;
         this.editUserProfileService = editUserProfileService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/init")
@@ -85,6 +92,12 @@ public class ApiGeneralController {
     @GetMapping(value = "/statistic/all")
     private ResponseEntity<ResponseApi> getAllStatistic(HttpServletRequest httpServletRequest){
         return editUserProfileService.getAllStatistic(httpServletRequest);
+    }
+
+    @PostMapping(value = "/comment")
+    private ResponseEntity<ResponseApi> postComment(@RequestBody @NotNull CommentRequest commentRequest,
+                                                    Principal principal){
+        return commentService.postComment(commentRequest, principal);
     }
 
 

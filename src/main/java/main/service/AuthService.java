@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 
 public interface AuthService {
 
@@ -20,4 +21,6 @@ public interface AuthService {
     ResponseEntity<ResponseApi> registerUser(RegisterRequest registerRequest);
 
     ResponseEntity<ResponseApi> logout(HttpServletRequest httpServletRequest);
+
+    ResponseEntity<ResponseApi> check(Principal principal);
 }

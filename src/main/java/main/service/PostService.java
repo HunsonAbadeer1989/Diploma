@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.time.LocalDate;
 
 public interface PostService {
@@ -24,13 +25,13 @@ public interface PostService {
 
     ResponseEntity<ResponseApi> getPostsByTag(int offset, int limit, String tag);
 
-    ResponseEntity<ResponseApi> getPostsForModeration(int offset, int limit, String status);
+    ResponseEntity<ResponseApi> getPostsForModeration(int offset, int limit, String status, Principal principal);
 
-    ResponseEntity<ResponseApi> getMyPosts(int offset, int limit, String status);
+    ResponseEntity<ResponseApi> getMyPosts(int offset, int limit, String status, Principal principal);
 
     ResponseEntity<ResponseApi> getPostById(long id);
 
-    ResponseEntity<ResponseApi> addPost(AddPostRequest addPostRequest);
+    ResponseEntity<ResponseApi> addPost(AddPostRequest addPostRequest, Principal principal);
 
     ResponseEntity<ResponseApi> updatePost(AddPostRequest addPostRequest);
 

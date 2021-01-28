@@ -26,7 +26,7 @@ public class Post {
     private ModerationStatus moderationStatus;
 
     @Column(name = "moderator_id", nullable = true)
-    private Long moderatorId = null;
+    private Long moderatorId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

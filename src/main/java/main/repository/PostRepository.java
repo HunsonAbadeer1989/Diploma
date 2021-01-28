@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,14 +16,14 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
 
     @Query(value = "SELECT * FROM posts AS p WHERE p.is_active=1 " +
             "AND p.publication_time < NOW() " +
-            "AND p.moderation_status = 'ACCEPTED' " , nativeQuery = true)
+            "AND p.moderation_status = 'ACCEPTED' ", nativeQuery = true)
         // All POSTS
     Page<Post> getAllPosts(Pageable page);
 
     @Query(value = "SELECT * FROM posts AS p WHERE p.is_active=1 " +
             "AND p.publication_time < NOW() " +
             "AND p.moderation_status = 'ACCEPTED' " +
-            "ORDER BY p.publication_time DESC " , nativeQuery = true)
+            "ORDER BY p.publication_time DESC ", nativeQuery = true)
         // RECENT POSTS
     Page<Post> getRecentPosts(Pageable page);
 
@@ -96,10 +97,50 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
             "AND p.moderation_status = 'NEW'", nativeQuery = true)
     int countPostsForModeration();
 
-    @Query(value ="SELECT * FROM posts AS p " +
+    @Query(value = "SELECT * FROM posts AS p " +
+            "WHERE p.publication_time < NOW() " +
+            "AND p.is_active = 1 " +
+            "AND p.moderation_status = :status " +
+            "ORDER BY p.publication_time DESC", nativeQuery = true)
+    Page<Post> getPostsForModeration(@Param("status") String status, Pageable pageable);
+
+    @Query(value = "SELECT * FROM posts AS p " +
+            "WHERE p.moderator_id = :id " +
+            "AND p.is_active = 1 " +
+            "AND p.moderation_status = :status " +
+            "AND p.publication_time < NOW() " +
+            "ORDER BY p.publication_time DESC", nativeQuery = true)
+    Page<Post> getPostsByMyModeration(@Param("status") String status, @Param("id") long id, Pageable pageable);
+
+
+    @Query(value = "SELECT * FROM posts AS p " +
             "WHERE p.publication_time < NOW() " +
             "AND p.is_active = 1 " +
             "AND p.moderation_status = 'ACCEPTED' " +
             "AND (p.text LIKE %?1% OR title LIKE %?1%)", nativeQuery = true)
     Page<Post> getPostsByQuery(String query, Pageable page);
+
+    @Query(value = "SELECT p.* FROM posts p " +
+            "JOIN users u ON u.id = p.user_id " +
+            "WHERE u.email = :email " +
+            "AND p.is_active = 0 " +
+            "AND p.publication_time < NOW() " +
+            "ORDER BY p.publication_time DESC", nativeQuery = true)
+    Page<Post> getMyInactivePosts(@Param("email") String email, Pageable pageable);
+
+    @Query(value = "SELECT p.* FROM posts p " +
+            "JOIN users u ON u.id = p.user_id " +
+            "WHERE u.email = :email " +
+            "AND p.is_active = 1 " +
+            "AND p.moderation_status = :status " +
+            "AND p.publication_time < NOW() " +
+            "ORDER BY p.publication_time DESC",nativeQuery = true)
+    Page<Post> getMyActivePosts(@Param("status") String status, @Param("email") String email, Pageable pageable);
+
+    @Query(value = "SELECT COUNT(*) FROM posts p " +
+            "JOIN users u ON u.id = p.user_id " +
+            "WHERE u.email = :email " +
+            "AND p.is_active = 1 " +
+            "AND p.moderation_status = 'NEW'", nativeQuery = true)
+    int findAllPostsIsModerate(@Param("email") String email);
 }

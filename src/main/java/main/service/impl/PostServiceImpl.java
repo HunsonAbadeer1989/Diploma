@@ -5,28 +5,37 @@ import main.api.request.ModerationOfPostRequest;
 import main.api.request.VotesRequest;
 import main.api.response.*;
 import main.model.Post;
+import main.model.User;
 import main.repository.PostRepository;
+import main.repository.UserRepository;
 import main.service.PostService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.file.Files;
+import java.security.Principal;
 import java.sql.Date;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class PostServiceImpl implements PostService {
 
-    PostRepository postRepository;
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public PostServiceImpl(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -100,17 +109,39 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<ResponseApi> getPostsForModeration(int offset, int limit, String status) {
-        return null;
+    public ResponseEntity<ResponseApi> getPostsForModeration(int offset, int limit, String status, Principal principal) {
+        Pageable pageable = PageRequest.of(offset, limit);
+
+        Page<Post> pageForModerationResponse;
+
+        if (status.equals("new")) {
+            pageForModerationResponse = postRepository.getPostsForModeration(status, pageable);
+        } else {
+            User user = userRepository.findByEmail(principal.getName());
+            pageForModerationResponse = postRepository.getPostsByMyModeration(status, user.getId(), pageable);
+        }
+
+        return createResponse(pageForModerationResponse);
     }
 
     @Override
-    public ResponseEntity<ResponseApi> getMyPosts(int offset, int limit, String status) {
-        return null;
+    public ResponseEntity<ResponseApi> getMyPosts(int offset, int limit, String status, Principal principal) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        Page<Post> pageMyPostsResponse;
+
+        if ("inactive".equals(status)) {
+            pageMyPostsResponse = postRepository.getMyInactivePosts(principal.getName(), pageable);
+        } else {
+            pageMyPostsResponse = postRepository.getMyActivePosts(status, principal.getName(), pageable);
+        }
+        return createResponse(pageMyPostsResponse);
     }
 
     @Override
-    public ResponseEntity<ResponseApi> addPost(AddPostRequest addPostRequest) {
+    public ResponseEntity<ResponseApi> addPost(AddPostRequest addPostRequest,
+                                               Principal principal) {
+        LocalDateTime datePost = setDateToPost(addPostRequest.getTimestamp());
+
         return null;
     }
 
@@ -162,5 +193,13 @@ public class PostServiceImpl implements PostService {
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
     }
 
-
+    private LocalDateTime setDateToPost(long timestamp) {
+        LocalDateTime dateOfPost =
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp),
+                        TimeZone.getDefault().toZoneId());
+        if (dateOfPost.isBefore(LocalDateTime.now())){
+            dateOfPost = LocalDateTime.now();
+        }
+        return dateOfPost;
+    }
 }

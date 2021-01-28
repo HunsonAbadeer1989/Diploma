@@ -44,6 +44,11 @@ public class ApiAuthController {
         return authService.loginUser(loginRequest);
     }
 
+    @GetMapping(value = "/check")
+    public ResponseEntity<ResponseApi> check(Principal principal) {
+        return authService.check(principal);
+    }
+
     @PostMapping(value = "/restore", params = {"email"})
     public ResponseEntity<ResponseApi> restorePassword(@RequestParam String email) {
         return authService.restorePassword(email);
