@@ -35,9 +35,7 @@ public interface PostService {
 
     ResponseEntity<ResponseApi> updatePost(AddPostRequest addPostRequest);
 
-    ResponseEntity<ResponseApi> likePost(VotesRequest votesRequest);
-
-    ResponseEntity<ResponseApi> dislikePost(VotesRequest votesRequest);
+    ResponseEntity<ResponseApi> votePost(VotesRequest votesRequest, Principal principal);
 
     ResponseEntity<ResponseApi> moderationOfPost(ModerationOfPostRequest moderationOfPostRequest, HttpServletRequest httpServletRequest);
 

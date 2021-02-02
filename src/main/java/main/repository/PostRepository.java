@@ -10,17 +10,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends PagingAndSortingRepository<Post, Integer> {
 
-    @Query(value = "SELECT * FROM posts AS p WHERE p.is_active=1 " +
+    @Query(value = "SELECT * FROM posts AS p " +
+            "WHERE p.is_active=1 " +
             "AND p.publication_time < NOW() " +
             "AND p.moderation_status = 'ACCEPTED' ", nativeQuery = true)
         // All POSTS
     Page<Post> getAllPosts(Pageable page);
 
-    @Query(value = "SELECT * FROM posts AS p WHERE p.is_active=1 " +
+    @Query(value = "SELECT * FROM posts AS p " +
+            "WHERE p.is_active=1 " +
             "AND p.publication_time < NOW() " +
             "AND p.moderation_status = 'ACCEPTED' " +
             "ORDER BY p.publication_time DESC ", nativeQuery = true)
@@ -54,7 +57,7 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
         // EARLY POSTS
     Page<Post> getEarlyPosts(Pageable page);
 
-    Post findById(long id);
+    Optional<Post> findById(long id);
 
     @Query(value = "SELECT COUNT(id) AS count FROM posts", nativeQuery = true)
         // COUNT ALL POSTS
@@ -66,6 +69,9 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
         // SEARCH BY DATE
     Page<Post> getPostsByDate(String date, Pageable page);
 
+    @Query(value = "SELECT * FROM posts AS p " +
+            "WHERE p.moderation_status = 'ACCEPTED' ", nativeQuery = true)
+    List<Post> getAllPostsOnSite();
 
     @Query(value = "SELECT * FROM posts AS p " +
             "LEFT JOIN (SELECT post_id, text AS comment FROM post_comments GROUP BY post_id)" +
@@ -134,7 +140,7 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
             "AND p.is_active = 1 " +
             "AND p.moderation_status = :status " +
             "AND p.publication_time < NOW() " +
-            "ORDER BY p.publication_time DESC",nativeQuery = true)
+            "ORDER BY p.publication_time DESC", nativeQuery = true)
     Page<Post> getMyActivePosts(@Param("status") String status, @Param("email") String email, Pageable pageable);
 
     @Query(value = "SELECT COUNT(*) FROM posts p " +
@@ -143,4 +149,10 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
             "AND p.is_active = 1 " +
             "AND p.moderation_status = 'NEW'", nativeQuery = true)
     int findAllPostsIsModerate(@Param("email") String email);
+
+    @Query(value = "SELECT * FROM posts AS p " +
+            "WHERE p.user_id = :user_id " +
+            "AND p.is_active = 1 " +
+            "AND p.moderation_status = 'ACCEPTED' ", nativeQuery = true)
+    List<Post> getUserPosts(@Param("user_id") Long userId);
 }

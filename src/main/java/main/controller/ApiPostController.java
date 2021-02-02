@@ -84,13 +84,14 @@ public class ApiPostController {
     }
 
     @PostMapping(value = "/like")
-    public ResponseEntity<ResponseApi> likePost(@RequestBody VotesRequest votesRequest) {
-        return postService.likePost(votesRequest);
+    public ResponseEntity<ResponseApi> like(@RequestBody VotesRequest votesRequest, Principal principal) {
+        votesRequest.setLike(true);
+        return postService.votePost(votesRequest, principal);
     }
 
     @PostMapping(value = "/dislike")
-    public ResponseEntity<ResponseApi> dislike(@RequestBody VotesRequest votesRequest) {
-        return postService.dislikePost(votesRequest);
+    public ResponseEntity<ResponseApi> dislike(@RequestBody VotesRequest votesRequest, Principal principal) {
+        return postService.votePost(votesRequest, principal);
     }
 
 }

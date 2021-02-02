@@ -1,12 +1,15 @@
 package main.service.impl;
 
+import com.sun.istack.NotNull;
 import main.api.request.AddPostRequest;
 import main.api.request.ModerationOfPostRequest;
 import main.api.request.VotesRequest;
 import main.api.response.*;
 import main.model.Post;
+import main.model.PostVotes;
 import main.model.User;
 import main.repository.PostRepository;
+import main.repository.PostVotesRepository;
 import main.repository.UserRepository;
 import main.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +18,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -37,13 +37,18 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private UserRepository userRepository;
 
-    public PostServiceImpl(PostRepository postRepository) {
+    @Autowired
+    private final PostVotesRepository postVotesRepository;
+
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, PostVotesRepository postVotesRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
+        this.postVotesRepository = postVotesRepository;
     }
 
     @Override
     public ResponseEntity<ResponseApi> getPostById(long id) {
-        Post post = postRepository.findById(id);
+        Post post = postRepository.findById(id).orElseThrow();
         if (post == null) {
             return new ResponseEntity<>(new NotFoundOrBadRequestResponse("Document not found"), HttpStatus.NOT_FOUND);
         }
@@ -65,7 +70,7 @@ public class PostServiceImpl implements PostService {
     }
 
     public ResponseEntity<ResponseApi> getPostsWithParams(String mode, Pageable pageable) {
-        return createResponse(findByMode(mode, pageable));
+        return createMyPostsResponse(findByMode(mode, pageable));
     }
 
     private Page<Post> findByMode(String mode, Pageable pageable) {
@@ -92,7 +97,7 @@ public class PostServiceImpl implements PostService {
         Page<Post> pagePost = Page.empty();
         if (query != null) {
             pagePost = postRepository.getPostsByQuery(query, page);
-            return createResponse(pagePost);
+            return createMyPostsResponse(pagePost);
         } else {
             return getAllPosts(postRepository.getAllPosts(page));
         }
@@ -114,27 +119,47 @@ public class PostServiceImpl implements PostService {
 
         Page<Post> pageForModerationResponse;
 
+        User user = userRepository.findByEmail(principal.getName());
+
+        if (!(user.getIsModerator() == 1)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
         if (status.equals("new")) {
             pageForModerationResponse = postRepository.getPostsForModeration(status, pageable);
         } else {
-            User user = userRepository.findByEmail(principal.getName());
             pageForModerationResponse = postRepository.getPostsByMyModeration(status, user.getId(), pageable);
         }
 
-        return createResponse(pageForModerationResponse);
+        return createMyPostsResponse(pageForModerationResponse);
     }
 
     @Override
     public ResponseEntity<ResponseApi> getMyPosts(int offset, int limit, String status, Principal principal) {
         Pageable pageable = PageRequest.of(offset, limit);
-        Page<Post> pageMyPostsResponse;
+        Page<Post> pageMyPostsResponse = null;
 
-        if ("inactive".equals(status)) {
-            pageMyPostsResponse = postRepository.getMyInactivePosts(principal.getName(), pageable);
-        } else {
-            pageMyPostsResponse = postRepository.getMyActivePosts(status, principal.getName(), pageable);
+        User user = userRepository.findByEmail(principal.getName());
+
+        switch (status) {
+            case "inactive":
+                pageMyPostsResponse = postRepository.getMyInactivePosts(principal.getName(), pageable);
+                break;
+            case "pending":
+                pageMyPostsResponse = postRepository.getMyActivePosts("NEW", user.getEmail(), pageable);
+                break;
+            case "declined":
+                pageMyPostsResponse = postRepository.getMyActivePosts("DECLINE", user.getEmail(), pageable);
+                break;
+            case "published":
+                pageMyPostsResponse = postRepository.getMyActivePosts("ACCEPTED", user.getEmail(), pageable);
+                break;
         }
-        return createResponse(pageMyPostsResponse);
+
+        if(pageMyPostsResponse == null){
+            return ResponseEntity.ok(new PostListResponse(0, new ArrayList<>()));
+        }
+
+        return createMyPostsResponse(pageMyPostsResponse);
     }
 
     @Override
@@ -151,13 +176,40 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<ResponseApi> likePost(VotesRequest votesRequest) {
-        return null;
-    }
+    public ResponseEntity<ResponseApi> votePost(@NotNull VotesRequest votesRequest, Principal principal) {
 
-    @Override
-    public ResponseEntity<ResponseApi> dislikePost(VotesRequest votesRequest) {
-        return null;
+        if (principal == null) {
+            return ResponseEntity.ok(new VoteResponse(false));
+        }
+
+        User user = userRepository.findUserByEmail(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User is not found"));
+
+        Post postForVote = postRepository.findById(votesRequest.getPostId())
+                .orElseThrow(() -> new NoSuchElementException("Post is not found"));
+
+        PostVotes postVotes = postVotesRepository.findVotes(postForVote.getId(), user.getId());
+
+        if (postVotes == null) {
+            PostVotes newPostVote = new PostVotes(user, postForVote, LocalDateTime.now(), (byte) 0);
+            postVotes = postVotesRepository.save(newPostVote);
+        }
+
+        if (votesRequest.isLike()) {
+            if (postVotes.getValue() == 0 || postVotes.getValue() == -1) {
+                postVotes.setValue(1);
+                postVotesRepository.save(postVotes);
+                return new ResponseEntity<>(new VoteResponse(true), HttpStatus.OK);
+            }
+        } else {
+            if (postVotes.getValue() == 0 || postVotes.getValue() == 1) {
+                postVotes.setValue(-1);
+                postVotesRepository.save(postVotes);
+                return new ResponseEntity<>(new VoteResponse(true), HttpStatus.OK);
+            }
+        }
+
+        return ResponseEntity.ok(new VoteResponse(false));
     }
 
     @Override
@@ -180,9 +232,8 @@ public class PostServiceImpl implements PostService {
         return new ResponseEntity<>(new PostsCalendarResponse(allYears, postsCountByDate), HttpStatus.OK);
     }
 
-    private ResponseEntity<ResponseApi> createResponse(Page<Post> page) {
-        List<Post> posts = page.getContent();
-        List<Post> postsList = new ArrayList<>(posts);
+    private ResponseEntity<ResponseApi> createMyPostsResponse(Page<Post> page) {
+        List<Post> postsList = page.getContent();
         ResponseApi listResponse = new PostListResponse((int) page.getTotalElements(), postsList);
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
     }
@@ -197,9 +248,10 @@ public class PostServiceImpl implements PostService {
         LocalDateTime dateOfPost =
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp),
                         TimeZone.getDefault().toZoneId());
-        if (dateOfPost.isBefore(LocalDateTime.now())){
+        if (dateOfPost.isBefore(LocalDateTime.now())) {
             dateOfPost = LocalDateTime.now();
         }
         return dateOfPost;
     }
+
 }
