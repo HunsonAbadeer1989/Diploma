@@ -72,15 +72,18 @@ public class ApiPostController {
         return postService.getMyPosts(offset, limit, status, principal);
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseApi> addPost(@RequestParam AddPostRequest addPostRequest,
+    @PostMapping(value = "")
+    public ResponseEntity<ResponseApi> addPost(@RequestBody AddPostRequest addPostRequest,
                                                Principal principal) {
         return postService.addPost(addPostRequest, principal);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ResponseApi> updatePost(@RequestParam AddPostRequest addPostRequest) {
-        return postService.updatePost(addPostRequest);
+    public ResponseEntity<ResponseApi> updatePost(
+            @PathVariable("id") long id,
+            @RequestBody AddPostRequest addPostRequest,
+            Principal principal) {
+        return postService.updatePost(id, addPostRequest, principal);
     }
 
     @PostMapping(value = "/like")

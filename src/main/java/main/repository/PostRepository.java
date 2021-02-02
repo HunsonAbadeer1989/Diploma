@@ -1,7 +1,10 @@
 package main.repository;
 
+import lombok.NonNull;
+import main.model.ModerationStatus;
 import main.model.Post;
 import main.model.PostComment;
+import main.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +12,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -155,4 +159,18 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
             "AND p.is_active = 1 " +
             "AND p.moderation_status = 'ACCEPTED' ", nativeQuery = true)
     List<Post> getUserPosts(@Param("user_id") Long userId);
+
+    @Query(value = "UPDATE posts AS p " +
+            "SET p.is_active = :is_active, " +
+            "p.moderation_status = :moderation_status, " +
+            "p.publication_time = :publication_time, " +
+            "p.title = :title, " +
+            "p.text = :text " +
+            "WHERE p.id = :post_id ", nativeQuery = true)
+    Post updatePost(@Param("post_id") long id,
+                    @Param("is_active") int isActive,
+                    @Param("publication_time") LocalDateTime publicationTime,
+                    @Param("moderation_status") ModerationStatus status,
+                    @Param("title") String title,
+                    @Param("text") String postText);
 }

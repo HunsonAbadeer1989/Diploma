@@ -33,7 +33,7 @@ public interface PostService {
 
     ResponseEntity<ResponseApi> addPost(AddPostRequest addPostRequest, Principal principal);
 
-    ResponseEntity<ResponseApi> updatePost(AddPostRequest addPostRequest);
+    ResponseEntity<ResponseApi> updatePost(long id, AddPostRequest addPostRequest, Principal principal);
 
     ResponseEntity<ResponseApi> votePost(VotesRequest votesRequest, Principal principal);
 

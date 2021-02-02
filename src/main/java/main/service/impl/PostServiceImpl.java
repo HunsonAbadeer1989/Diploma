@@ -5,13 +5,10 @@ import main.api.request.AddPostRequest;
 import main.api.request.ModerationOfPostRequest;
 import main.api.request.VotesRequest;
 import main.api.response.*;
-import main.model.Post;
-import main.model.PostVotes;
-import main.model.User;
-import main.repository.PostRepository;
-import main.repository.PostVotesRepository;
-import main.repository.UserRepository;
+import main.model.*;
+import main.repository.*;
 import main.service.PostService;
+import main.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,17 +29,25 @@ import java.util.*;
 public class PostServiceImpl implements PostService {
 
     @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    @Autowired
+    private final TagRepository tagRepository;
+
+    @Autowired
+    private final TagToPostRepository tagToPostRepository;
 
     @Autowired
     private final PostVotesRepository postVotesRepository;
 
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, PostVotesRepository postVotesRepository) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, TagRepository tagRepository, TagToPostRepository tagToPostRepository, PostVotesRepository postVotesRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.tagRepository = tagRepository;
+        this.tagToPostRepository = tagToPostRepository;
         this.postVotesRepository = postVotesRepository;
     }
 
@@ -155,7 +160,7 @@ public class PostServiceImpl implements PostService {
                 break;
         }
 
-        if(pageMyPostsResponse == null){
+        if (pageMyPostsResponse == null) {
             return ResponseEntity.ok(new PostListResponse(0, new ArrayList<>()));
         }
 
@@ -163,16 +168,103 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<ResponseApi> addPost(AddPostRequest addPostRequest,
-                                               Principal principal) {
+    public ResponseEntity<ResponseApi> addPost(AddPostRequest addPostRequest, Principal principal) {
+        User user = userRepository.findUserByEmail(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+
+        Map<String, String> errors = new HashMap<>();
+
+        if (addPostRequest.getTitle().length() < 3) {
+            errors.put("title", "Title isn't set");
+            if (addPostRequest.getText().length() < 50) {
+                errors.put("text", "Text is too short");
+                return ResponseEntity.ok(new AddPostResponse(false, errors));
+            }
+            return ResponseEntity.ok(new AddPostResponse(false, errors));
+        }
+
         LocalDateTime datePost = setDateToPost(addPostRequest.getTimestamp());
 
-        return null;
+        Post post = new Post(addPostRequest.getActive(), ModerationStatus.NEW, user, datePost,
+                addPostRequest.getTitle(), addPostRequest.getText());
+
+        Post addedPost = postRepository.save(post);
+
+        for (Tag tag : addPostRequest.getTags()) {
+            tagRepository.save(tag);
+            TagToPost tagToPost = new TagToPost(addedPost, tag);
+            tagToPostRepository.save(tagToPost);
+        }
+
+        return ResponseEntity.ok(new AddPostResponse(true));
     }
 
     @Override
-    public ResponseEntity<ResponseApi> updatePost(AddPostRequest addPostRequest) {
-        return null;
+    public ResponseEntity<ResponseApi> updatePost(long id, AddPostRequest updatePostRequest, Principal principal) {
+        User user = userRepository.findUserByEmail(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+
+        Post post = postRepository.findById(id).orElseThrow();
+
+        if (post == null) {
+            return new ResponseEntity<>(new NotFoundOrBadRequestResponse("Document not found"), HttpStatus.NOT_FOUND);
+        }
+
+        Map<String, String> errors = new HashMap<>();
+
+        if (updatePostRequest.getTitle().length() < 3) {
+            errors.put("title", "Title isn't set");
+            if (updatePostRequest.getText().length() < 50) {
+                errors.put("text", "Text is too short");
+                return ResponseEntity.ok(new AddPostResponse(false, errors));
+            }
+            return ResponseEntity.ok(new AddPostResponse(false, errors));
+        }
+
+        LocalDateTime datePost = setDateToPost(updatePostRequest.getTimestamp());
+
+//        Post updatePost;
+        /**
+        if (user.getIsModerator() == 1) {
+//            updatePost = new Post(updatePostRequest.getActive(), user, datePost,
+//                    updatePostRequest.getTitle(), updatePostRequest.getText());
+
+            postRepository.updatePost(post.getId(), updatePostRequest.getActive(), datePost,
+                    post.getModerationStatus(), updatePostRequest.getTitle(), updatePostRequest.getText());
+
+        } else {
+//            updatePost = new Post(updatePostRequest.getActive(), ModerationStatus.NEW, user, datePost,
+//                    updatePostRequest.getTitle(), updatePostRequest.getText());
+
+            postRepository.updatePost(post.getId(), updatePostRequest.getActive(), datePost,
+                    ModerationStatus.NEW, updatePostRequest.getTitle(), updatePostRequest.getText());
+        }
+         */
+
+        Post upPost = postRepository.findById(id)
+                .map(p -> {
+                    p.setIsActive(updatePostRequest.getActive());
+                    p.setTitle(updatePostRequest.getTitle());
+                    p.setPostText(updatePostRequest.getText());
+                    p.setPublicationTime(datePost);
+                    if(!(user.getIsModerator() == 1)){
+                        p.setModerationStatus(ModerationStatus.NEW);
+                    }
+                    return postRepository.save(p);
+                }).orElseThrow();
+//                .orElseGet(() -> {
+//                    newEmployee.setId(id);
+//                    return repository.save(newEmployee);
+//                });
+
+        for (Tag tag : updatePostRequest.getTags()) {
+            tagRepository.save(tag);
+            TagToPost tagToPost = new TagToPost(post, tag);
+            tagToPostRepository.save(tagToPost);
+
+        }
+
+        return ResponseEntity.ok(new AddPostResponse(true));
     }
 
     @Override
