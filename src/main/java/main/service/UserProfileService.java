@@ -6,13 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 public interface UserProfileService {
 
-    ResponseEntity<ResponseApi> editMyProfile(EditProfileRequest editProfileRequest, HttpServletRequest httpServletRequest);
+    ResponseEntity<ResponseApi> editMyProfile(EditProfileRequest editProfileRequest, Principal principal);
 
-    ResponseEntity<ResponseApi> getMyStatistic(HttpServletRequest httpServletRequest);
+    ResponseEntity<ResponseApi> getMyStatistic(Principal principal);
 
-    ResponseEntity<ResponseApi> getAllStatistic(HttpServletRequest httpServletRequest);
+    ResponseEntity<ResponseApi> getAllStatistic();
 
 }

@@ -39,13 +39,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public ResponseEntity<ResponseApi> postComment(CommentRequest commentRequest, Principal principal) {
-        PostComment newPostComment;
-        HashMap<String, String> errors = new HashMap<>();
 
         User user = userRepository.findUserByEmail(principal.getName()).orElseThrow(
                 () -> new UsernameNotFoundException("user not found"));
 
-        Post postById = postRepository.findById(commentRequest.getPostId());
+        HashMap<String, String> errors = new HashMap<>();
 
         if (commentRequest.getText().length() < 1) {
             errors.put("text", "Text of comment is too short");
@@ -53,21 +51,22 @@ public class CommentServiceImpl implements CommentService {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
+        Post post = postRepository.findById(commentRequest.getPostId()).orElseThrow();
+
+        PostComment newPostComment;
+
         if (!(commentRequest.getParentId() == null)) {
-            if (commentRepository.findCommentById(commentRequest.getParentId()) == null || postById == null) {
+            if (commentRepository.findCommentById(commentRequest.getParentId()) == null || post == null) {
                 errors.put("text", "This post and/or comment is absent");
                 CommentErrorResponse errorResponse = new CommentErrorResponse(false, errors);
                 return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
             }
-            newPostComment = new PostComment(commentRequest.getParentId(), postById, user, LocalDateTime.now(),
+            newPostComment = new PostComment(commentRequest.getParentId(), post, user, LocalDateTime.now(),
                     commentRequest.getText());
-        } else {
-            newPostComment = new PostComment(postById, user, LocalDateTime.now(), commentRequest.getText());
+            return ResponseEntity.ok(new CommentAddResponse(commentRepository.save(newPostComment).getId()));
         }
+        newPostComment = new PostComment(post, user, LocalDateTime.now(), commentRequest.getText());
+        return ResponseEntity.ok(new CommentAddResponse(commentRepository.save(newPostComment).getId()));
 
-        PostComment addedComment = commentRepository.save(newPostComment);
-        CommentAddResponse newComment = new CommentAddResponse(addedComment.getId());
-
-        return ResponseEntity.ok(newComment);
     }
 }

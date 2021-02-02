@@ -80,18 +80,18 @@ public class ApiGeneralController {
     }
 
     @PostMapping(value = ("/profile/my"))
-    private ResponseEntity<ResponseApi> editMyProfile(@RequestBody EditProfileRequest editProfileRequest, HttpServletRequest httpServletRequest) {
-        return editUserProfileService.editMyProfile(editProfileRequest, httpServletRequest);
+    private ResponseEntity<ResponseApi> editMyProfile(@RequestBody EditProfileRequest editProfileRequest, Principal principal) {
+        return editUserProfileService.editMyProfile(editProfileRequest, principal);
     }
 
-    @GetMapping(value = "/statistic/my")
-    private ResponseEntity<ResponseApi> getMyStatistic(HttpServletRequest httpServletRequest){
-        return editUserProfileService.getMyStatistic(httpServletRequest);
+    @GetMapping(value = "/statistics/my")
+    private ResponseEntity<ResponseApi> getMyStatistic(Principal principal){
+        return editUserProfileService.getMyStatistic(principal);
     }
 
-    @GetMapping(value = "/statistic/all")
-    private ResponseEntity<ResponseApi> getAllStatistic(HttpServletRequest httpServletRequest){
-        return editUserProfileService.getAllStatistic(httpServletRequest);
+    @GetMapping(value = "/statistics/all")
+    private ResponseEntity<ResponseApi> getAllStatistic(){
+        return editUserProfileService.getAllStatistic();
     }
 
     @PostMapping(value = "/comment")
