@@ -1,7 +1,6 @@
 package main.service.impl;
 
 import main.api.request.EditProfileRequest;
-import main.api.request.EditProfileWithPhotoRequest;
 import main.api.response.EditProfileResponse;
 import main.api.response.ImageResponse;
 import main.api.response.ResponseApi;
@@ -12,6 +11,8 @@ import main.model.User;
 import main.repository.PostRepository;
 import main.repository.UserRepository;
 import main.service.UserProfileService;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +20,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
@@ -40,13 +41,12 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     private final SecurityConfig securityConfig;
 
-    @Value("${spring.servlet.multipart.location}")
-    private String PATH;
     @Value("${spring.servlet.multipart.max-file-size}")
     private int MAX_FILE_SIZE;
 
-
-    public UserProfileServiceImpl(UserRepository userRepository, PostRepository postRepository, SecurityConfig securityConfig) {
+    public UserProfileServiceImpl(UserRepository userRepository,
+                                  PostRepository postRepository,
+                                  SecurityConfig securityConfig) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.securityConfig = securityConfig;
@@ -81,8 +81,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
                 if (removePhoto == null) { // Edit name email and password
                     userRepository.editNameEmailPassword(name, email, encodePassword, userEmail);
-                }
-                else if (removePhoto == 1) {
+                } else if (removePhoto == 1) {
                     userRepository.editNameEmailAndPhoto(name, email, "", userEmail);
                 }
             }
@@ -100,7 +99,7 @@ public class UserProfileServiceImpl implements UserProfileService {
                                                               String name,
                                                               String email,
                                                               String password,
-                                                              Principal principal) {
+                                                              Principal principal) throws Exception {
 
         EditProfileResponse editResponse = new EditProfileResponse(true);
         HashMap<String, String> errors = new HashMap<>();
@@ -116,7 +115,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             PasswordEncoder encoder = securityConfig.passwordEncoder();
             String encodePassword = encoder.encode(password);
 
-            String filePath = saveUserPhoto(photo, "usersPhoto");
+            String filePath = saveUserPhoto(photo, "userPhoto");
             userRepository.editPasswordAndPhoto(name, email, encodePassword, userEmail, filePath);
 
         } else {
@@ -164,7 +163,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public Object uploadImage(MultipartFile image, String folder) {
+    public Object uploadImage(MultipartFile image, String folder) throws Exception {
 
         ImageResponse imageResponse = new ImageResponse();
 
@@ -193,29 +192,32 @@ public class UserProfileServiceImpl implements UserProfileService {
             return new ResponseEntity<>(imageResponse, HttpStatus.BAD_REQUEST);
         }
 
-        HashMap<String, String> paths = createPathForImage(folder);
-
         try {
             if (image.getSize() < MAX_FILE_SIZE) {
 
-                File uploadImage = new File(System.getProperty("user.dir") + File.separator +
-                        paths.get("uploadPath") + File.separator + resultFilename);
+                String[] uuidPath = UUID.randomUUID().toString().split("\\-");
 
-                image.transferTo(uploadImage);
+                String folderPath = folder.equals("userPhoto") ? "/upload/profile_photo" : "/upload";
 
-                if (folder.equals("usersPhoto")) { // If user profile photo
-                    BufferedImage originalImage = ImageIO.read(uploadImage);
-                    OutputStream os = new FileOutputStream(uploadImage.getPath(), false);
+                String resultPath = "/" + folderPath + "/" + uuidPath[0] + "/" + uuidPath[1] + "/" + uuidPath[2];
 
-                    BufferedImage resizedImage = new BufferedImage(36, 36, 5);
-                    Graphics2D g = resizedImage.createGraphics();
-                    g.drawImage(originalImage, 0, 0, 36, 36, null);
-                    g.dispose();
-
-                    ImageIO.write(resizedImage, "jpg", os);
+                Path uploadDir = Paths.get("src/main/resources/static" + resultPath);
+                if (!Files.exists(uploadDir)) {
+                    Files.createDirectories(uploadDir);
                 }
 
-                return paths.get("pathForResponse") + "/" + resultFilename;
+                Path filePath = uploadDir.resolve(resultFilename);
+
+                if (folder.equals("userPhoto")) { // If user profile photo
+
+                    File resizeFile = new File(String.valueOf(filePath));
+                    simpleResizeImage(image, resizeFile);
+                }
+
+                Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+
+                return new ResponseEntity<>(resultPath + "/" + resultFilename, HttpStatus.OK);
 
             } else {
                 imageResponse = new ImageResponse();
@@ -262,49 +264,6 @@ public class UserProfileServiceImpl implements UserProfileService {
         return new StatisticResponse(postsCount, likesCount, dislikesCount, viewsCount, firstPublication);
     }
 
-    private HashMap<String, String> createPathForImage(String nameOfFolder) {
-        HashMap<String, String> paths = new HashMap<>();
-        String imagesPath = PATH + File.separator + nameOfFolder;
-        File uploadCatalog = new File(imagesPath);
-
-        if (!uploadCatalog.exists()) {
-            uploadCatalog.mkdirs();
-        }
-
-        String uploadPath = imagesPath;
-        String tempNameOfFolder = nameOfFolder.equals("") ? "" : File.separator + nameOfFolder;
-        StringBuilder pathForResponse = new StringBuilder("/upload" + tempNameOfFolder);
-        String newUploadPath;
-        for (int i = 0; i < 3; i++) {
-            String randomString = getRandomString(2);
-            newUploadPath = uploadPath + File.separator + randomString;
-            pathForResponse.append("/").append(randomString);
-            File uploadDir = new File(newUploadPath);
-
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-
-            uploadPath = newUploadPath;
-        }
-        paths.put("uploadPath", uploadPath);
-        paths.put("pathForResponse", pathForResponse.toString());
-        return paths;
-    }
-
-    private String getRandomString(int number) {
-        String numbersAndLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
-
-        StringBuilder sb = new StringBuilder(number);
-
-        for (int j = 0; j < number; j++) {
-            int index = (int) (numbersAndLetters.length() * Math.random());
-            sb.append(numbersAndLetters.charAt(index));
-        }
-
-        return sb.toString();
-    }
-
     public boolean checkEditRequestArgs(MultipartFile photo,
                                         String name,
                                         String email,
@@ -337,13 +296,21 @@ public class UserProfileServiceImpl implements UserProfileService {
         return editResponse.isResult();
     }
 
-    protected String saveUserPhoto(MultipartFile photo, String folder) {
+    protected String saveUserPhoto(MultipartFile photo, String folder) throws Exception {
         Object pathToPhoto = uploadImage(photo, folder);
         if (pathToPhoto.getClass().getName().equals("java.lang.String")) {
             return (String) pathToPhoto;
         } else {
             return null;
         }
+    }
+
+    public void simpleResizeImage(MultipartFile photo, File resizeFile) throws Exception {
+        Thumbnails.of(photo.getInputStream())
+                .crop(Positions.CENTER_LEFT)
+                .size(36, 36)
+                .keepAspectRatio(true)
+                .toFile(resizeFile);
     }
 
 }

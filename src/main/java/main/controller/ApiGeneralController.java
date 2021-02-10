@@ -88,7 +88,7 @@ public class ApiGeneralController {
                                                                @RequestParam("name") String name,
                                                                @RequestParam("email") String email,
                                                                @RequestParam("password") String password,
-                                                               Principal principal) {
+                                                               Principal principal) throws Exception {
         return editUserProfileService.editMyProfileWithPhoto(photo, name, email, password, principal);
     }
 
@@ -116,8 +116,8 @@ public class ApiGeneralController {
 
     @PostMapping(value = "/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    private Object uploadImage(@RequestParam("image") MultipartFile image) {
-        return editUserProfileService.uploadImage(image, "");
+    private Object uploadImage(@RequestParam("image") MultipartFile image) throws Exception {
+        return editUserProfileService.uploadImage(image, "upload");
     }
 
 

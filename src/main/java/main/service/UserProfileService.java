@@ -16,12 +16,12 @@ public interface UserProfileService {
                                                        String name,
                                                        String email,
                                                        String password,
-                                                       Principal principal);
+                                                       Principal principal) throws Exception;
 
     ResponseEntity<ResponseApi> getMyStatistic(Principal principal);
 
     ResponseEntity<ResponseApi> getAllStatistic();
 
-    Object uploadImage(MultipartFile image, String folder);
+    Object uploadImage(MultipartFile image, String folder) throws Exception;
 
 }
