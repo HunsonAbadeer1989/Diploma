@@ -3,12 +3,12 @@ package main.service.impl;
 import com.sun.istack.NotNull;
 import main.api.request.AddPostRequest;
 import main.api.request.ModerationOfPostRequest;
+import main.api.request.TagRequest;
 import main.api.request.VotesRequest;
 import main.api.response.*;
 import main.model.*;
 import main.repository.*;
 import main.service.PostService;
-import main.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -190,10 +190,11 @@ public class PostServiceImpl implements PostService {
 
         Post addedPost = postRepository.save(post);
 
-        for (Tag tag : addPostRequest.getTags()) {
+        TagRequest tagRequest = new TagRequest(addPostRequest.getTags());
+
+        for (Tag tag : tagRequest.getTags()) {
             tagRepository.save(tag);
-            TagToPost tagToPost = new TagToPost(addedPost, tag);
-            tagToPostRepository.save(tagToPost);
+            tagToPostRepository.insertTag2Post(addedPost.getId(), tag.getId());
         }
 
         return ResponseEntity.ok(new AddPostResponse(true));
@@ -223,45 +224,19 @@ public class PostServiceImpl implements PostService {
 
         LocalDateTime datePost = setDateToPost(updatePostRequest.getTimestamp());
 
-//        Post updatePost;
-        /**
         if (user.getIsModerator() == 1) {
-//            updatePost = new Post(updatePostRequest.getActive(), user, datePost,
-//                    updatePostRequest.getTitle(), updatePostRequest.getText());
-
-            postRepository.updatePost(post.getId(), updatePostRequest.getActive(), datePost,
-                    post.getModerationStatus(), updatePostRequest.getTitle(), updatePostRequest.getText());
-
+            postRepository.updatePostByModerator(post.getId(), updatePostRequest.getActive(), datePost,
+                    updatePostRequest.getTitle(), updatePostRequest.getText());
         } else {
-//            updatePost = new Post(updatePostRequest.getActive(), ModerationStatus.NEW, user, datePost,
-//                    updatePostRequest.getTitle(), updatePostRequest.getText());
-
-            postRepository.updatePost(post.getId(), updatePostRequest.getActive(), datePost,
-                    ModerationStatus.NEW, updatePostRequest.getTitle(), updatePostRequest.getText());
+            postRepository.updatePostByUser(post.getId(), updatePostRequest.getActive(), datePost,
+                    updatePostRequest.getTitle(), updatePostRequest.getText());
         }
-         */
 
-        Post upPost = postRepository.findById(id)
-                .map(p -> {
-                    p.setIsActive(updatePostRequest.getActive());
-                    p.setTitle(updatePostRequest.getTitle());
-                    p.setPostText(updatePostRequest.getText());
-                    p.setPublicationTime(datePost);
-                    if(!(user.getIsModerator() == 1)){
-                        p.setModerationStatus(ModerationStatus.NEW);
-                    }
-                    return postRepository.save(p);
-                }).orElseThrow();
-//                .orElseGet(() -> {
-//                    newEmployee.setId(id);
-//                    return repository.save(newEmployee);
-//                });
+        TagRequest tagRequest = new TagRequest(updatePostRequest.getTags());
 
-        for (Tag tag : updatePostRequest.getTags()) {
+        for (Tag tag : tagRequest.getTags()) {
             tagRepository.save(tag);
-            TagToPost tagToPost = new TagToPost(post, tag);
-            tagToPostRepository.save(tagToPost);
-
+            tagToPostRepository.insertTag2Post(post.getId(), tag.getId());
         }
 
         return ResponseEntity.ok(new AddPostResponse(true));
@@ -287,27 +262,24 @@ public class PostServiceImpl implements PostService {
             postVotes = postVotesRepository.save(newPostVote);
         }
 
-        if (votesRequest.isLike()) {
-            if (postVotes.getValue() == 0 || postVotes.getValue() == -1) {
-                postVotes.setValue(1);
-                postVotesRepository.save(postVotes);
-                return new ResponseEntity<>(new VoteResponse(true), HttpStatus.OK);
-            }
-        } else {
-            if (postVotes.getValue() == 0 || postVotes.getValue() == 1) {
-                postVotes.setValue(-1);
-                postVotesRepository.save(postVotes);
-                return new ResponseEntity<>(new VoteResponse(true), HttpStatus.OK);
-            }
+        int voteRequest = votesRequest.isLike() ? 1 : -1;
+
+        if (postVotes.getValue() == voteRequest) {
+            return ResponseEntity.ok(new VoteResponse(false));
         }
 
-        return ResponseEntity.ok(new VoteResponse(false));
+        postVotes.setValue(voteRequest);
+        postVotesRepository.save(postVotes);
+        return new ResponseEntity<>(new VoteResponse(true), HttpStatus.OK);
+
     }
 
     @Override
     public ResponseEntity<ResponseApi> moderationOfPost(ModerationOfPostRequest moderationOfPostRequest,
-                                                        HttpServletRequest httpServletRequest) {
-        return null;
+                                                        Principal principal) {
+
+
+        return ResponseEntity.ok(new CheckResponse(true));
     }
 
     @Override

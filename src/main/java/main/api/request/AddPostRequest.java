@@ -16,7 +16,7 @@ public class AddPostRequest implements RequestApi {
     private long timestamp;
     private int active;
     private String title;
-    private List<Tag> tags;
+    private List<String> tags;
     private String text;
 
 }

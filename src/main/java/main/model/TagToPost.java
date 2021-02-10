@@ -1,14 +1,12 @@
 package main.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Data
 @RequiredArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "tag2post")
 public class TagToPost {

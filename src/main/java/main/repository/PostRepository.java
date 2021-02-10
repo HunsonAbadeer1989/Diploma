@@ -1,17 +1,16 @@
 package main.repository;
 
-import lombok.NonNull;
-import main.model.ModerationStatus;
 import main.model.Post;
 import main.model.PostComment;
-import main.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -160,17 +159,51 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
             "AND p.moderation_status = 'ACCEPTED' ", nativeQuery = true)
     List<Post> getUserPosts(@Param("user_id") Long userId);
 
-    @Query(value = "UPDATE posts AS p " +
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE posts p " +
             "SET p.is_active = :is_active, " +
-            "p.moderation_status = :moderation_status, " +
+            "p.moderation_status = 'NEW', " +
             "p.publication_time = :publication_time, " +
             "p.title = :title, " +
             "p.text = :text " +
             "WHERE p.id = :post_id ", nativeQuery = true)
-    Post updatePost(@Param("post_id") long id,
-                    @Param("is_active") int isActive,
-                    @Param("publication_time") LocalDateTime publicationTime,
-                    @Param("moderation_status") ModerationStatus status,
-                    @Param("title") String title,
-                    @Param("text") String postText);
+    void updatePostByUser(@Param("post_id") long id,
+                          @Param("is_active") int isActive,
+                          @Param("publication_time") LocalDateTime publicationTime,
+                          @Param("title") String title,
+                          @Param("text") String postText);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE posts p " +
+            "SET p.is_active = :is_active, " +
+            "p.publication_time = :publication_time, " +
+            "p.title = :title, " +
+            "p.text = :text " +
+            "WHERE p.id = :post_id ", nativeQuery = true)
+    void updatePostByModerator(@Param("post_id") long id,
+                          @Param("is_active") int isActive,
+                          @Param("publication_time") LocalDateTime publicationTime,
+                          @Param("title") String title,
+                          @Param("text") String postText);
+
+    @Query(value = "SELECT COUNT(*) FROM posts AS p " +
+            "JOIN post_votes AS pv " +
+            "ON p.id = pv.post_id " +
+            "WHERE p.is_active = 1 " +
+            "AND p.moderation_status = 'ACCEPTED' " +
+            "AND pv.value = :value ", nativeQuery = true)
+    int countAllVotes(@Param("value") int value);
+
+    @Query(value = "SELECT SUM(p.view_count) FROM posts AS p " +
+            "WHERE p.is_active = 1 " +
+            "AND p.moderation_status = 'ACCEPTED' ", nativeQuery = true)
+    int sumAllViews();
+
+    @Query(value = "SELECT * FROM posts AS p " +
+            "WHERE p.is_active = 1 " +
+            "AND p.moderation_status = 'ACCEPTED' " +
+            "ORDER BY p.publication_time ASC LIMIT 1 ", nativeQuery = true)
+    Post getPostWithMinimumDate();
 }

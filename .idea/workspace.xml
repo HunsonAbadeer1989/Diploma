@@ -5,18 +5,57 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1ad53d45-512a-4ce8-a777-6901c2c4f76f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/main/repository/TagToPostRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/Dc/tx/Ug/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/M8/FY/GW/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/NK/nX/rb/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/RW/pI/aH/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/Ul/9X/X0/IMG_3913.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/hd/X7/CB/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/m9/9V/EY/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/profileImages/9l/7H/Wb/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/profileImages/Qi/mn/WW/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/profileImages/ZC/sL/CY/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/profileImages/ab/S4/Un/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/path/profileImages/nk/FA/VK/free-best-hd-wallpapers-mac-wallpapers-tablet-4k-best-wallpaper-ever-samsung-wallpapers-wallpaper-for-iphone-download-pictures-1920x1080.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/main/api/request/EditProfileWithPhotoRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/main/api/response/EditProfileResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/main/api/response/ImageResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/upload/EX/3e/Ri/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/upload/IW/xI/pt/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/upload/JL/8V/eh/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/upload/usersPhoto/TT/uW/Nh/IMG_3912.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/upload/usersPhoto/fX/7I/PU/IMG_3912.JPG" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/api/response/AddPostResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/api/response/AddPostResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/controller/ApiPostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/controller/ApiPostController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/model/Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/model/Post.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/api/request/AddPostRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/api/request/AddPostRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/api/request/EditProfileRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/api/request/EditProfileRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/api/request/TagRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/api/request/TagRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/api/response/CheckResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/api/response/CheckResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/controller/ApiGeneralController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/controller/ApiGeneralController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/model/Tag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/model/Tag.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main/model/TagToPost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/model/TagToPost.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main/repository/PostRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/repository/PostRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/repository/TagToPostRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/repository/TagToPostRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/repository/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main/service/PostService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/PostService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/UserProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/UserProfileService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main/service/impl/PostServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/impl/PostServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/main/api/response/AddPostResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/api/response/AddPostResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/main/controller/ApiPostController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/controller/ApiPostController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/impl/UserProfileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/impl/UserProfileServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/api/request/AddPostRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/api/request/AddPostRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/api/request/EditProfileRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/api/request/EditProfileRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/api/request/TagRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/api/request/TagRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/api/response/CheckResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/api/response/CheckResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/controller/ApiGeneralController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/controller/ApiGeneralController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/model/Tag.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/model/Tag.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/model/TagToPost.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/model/TagToPost.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/repository/PostRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/repository/PostRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/repository/TagToPostRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/repository/TagToPostRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/repository/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/service/PostService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/PostService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/service/UserProfileService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/UserProfileService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/main/service/impl/PostServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/impl/PostServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/service/impl/UserProfileServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/impl/UserProfileServiceImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,10 +115,10 @@
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="main.api.response" />
+      <recent name="main.api.request" />
       <recent name="main.repository" />
       <recent name="main.service" />
-      <recent name="main.api.request" />
-      <recent name="main.api.response" />
       <recent name="main.service.interfaces" />
     </key>
     <key name="CopyFile.RECENT_KEYS">

@@ -3,6 +3,7 @@ package main.controller;
 import com.sun.istack.NotNull;
 import main.api.request.CommentRequest;
 import main.api.request.EditProfileRequest;
+import main.api.request.EditProfileWithPhotoRequest;
 import main.api.request.ModerationOfPostRequest;
 import main.api.response.InitResponse;
 import main.api.response.ResponseApi;
@@ -13,10 +14,11 @@ import main.service.impl.SettingsServiceImpl;
 import main.service.impl.UserProfileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @RestController
@@ -60,7 +62,7 @@ public class ApiGeneralController {
     }
 
     @GetMapping(value = ("/tag"), params = {"query"})
-    public ResponseEntity<ResponseApi> getTagList(@Param(value= "query") String query) {
+    public ResponseEntity<ResponseApi> getTagList(@Param(value = "query") String query) {
         return tagService.getTagList(query);
     }
 
@@ -70,8 +72,9 @@ public class ApiGeneralController {
     }
 
     @PostMapping(value = ("/moderation"))
-    private ResponseEntity<ResponseApi> moderationOfPost(@RequestBody ModerationOfPostRequest moderationOfPostRequest, HttpServletRequest httpServletRequest) {
-        return postService.moderationOfPost(moderationOfPostRequest, httpServletRequest);
+    private ResponseEntity<ResponseApi> moderationOfPost(@RequestBody ModerationOfPostRequest moderationOfPostRequest,
+                                                         Principal principal) {
+        return postService.moderationOfPost(moderationOfPostRequest, principal);
     }
 
     @GetMapping(value = ("/calendar"), params = {"year"})
@@ -79,25 +82,42 @@ public class ApiGeneralController {
         return postService.calendarOfPosts(year);
     }
 
+    @PostMapping(value = ("/profile/my"), consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    private ResponseEntity<ResponseApi> editMyProfileWithPhoto(@RequestParam("photo") MultipartFile photo,
+                                                               @RequestParam("name") String name,
+                                                               @RequestParam("email") String email,
+                                                               @RequestParam("password") String password,
+                                                               Principal principal) {
+        return editUserProfileService.editMyProfileWithPhoto(photo, name, email, password, principal);
+    }
+
     @PostMapping(value = ("/profile/my"))
-    private ResponseEntity<ResponseApi> editMyProfile(@RequestBody EditProfileRequest editProfileRequest, Principal principal) {
+    private ResponseEntity<ResponseApi> editMyProfile(@RequestBody(required = false) EditProfileRequest editProfileRequest,
+                                                      Principal principal) {
         return editUserProfileService.editMyProfile(editProfileRequest, principal);
     }
 
     @GetMapping(value = "/statistics/my")
-    private ResponseEntity<ResponseApi> getMyStatistic(Principal principal){
+    private ResponseEntity<ResponseApi> getMyStatistic(Principal principal) {
         return editUserProfileService.getMyStatistic(principal);
     }
 
     @GetMapping(value = "/statistics/all")
-    private ResponseEntity<ResponseApi> getAllStatistic(){
+    private ResponseEntity<ResponseApi> getAllStatistic() {
         return editUserProfileService.getAllStatistic();
     }
 
     @PostMapping(value = "/comment")
     private ResponseEntity<ResponseApi> postComment(@RequestBody @NotNull CommentRequest commentRequest,
-                                                    Principal principal){
+                                                    Principal principal) {
         return commentService.postComment(commentRequest, principal);
+    }
+
+    @PostMapping(value = "/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    private Object uploadImage(@RequestParam("image") MultipartFile image) {
+        return editUserProfileService.uploadImage(image, "");
     }
 
 

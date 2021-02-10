@@ -1,11 +1,13 @@
 package main.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Data
+@RequiredArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "tags")
 public class Tag {
@@ -15,6 +17,7 @@ public class Tag {
     private long id;
 
     @Column
+    @NonNull
     private String name;
 
     @OneToMany
@@ -23,5 +26,7 @@ public class Tag {
             joinColumns = {@JoinColumn(name = "tag_id")},
             inverseJoinColumns = {@JoinColumn(name = "post_id")})
     private List<Post> posts;
+
+
 
 }
