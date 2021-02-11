@@ -206,4 +206,14 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
             "AND p.moderation_status = 'ACCEPTED' " +
             "ORDER BY p.publication_time ASC LIMIT 1 ", nativeQuery = true)
     Post getPostWithMinimumDate();
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE posts AS p " +
+            "SET p.moderator_id = :moderator_id, " +
+            "p.moderation_status = :status " +
+            "WHERE p.id = :post_id ", nativeQuery = true)
+    void updateModeratorField(@Param("post_id")Post postById,
+                              @Param("moderator_id") long id,
+                              @Param("status") String status);
 }

@@ -1,5 +1,7 @@
 package main.service.impl;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.sun.istack.NotNull;
 import main.api.request.AddPostRequest;
 import main.api.request.ModerationOfPostRequest;
@@ -9,6 +11,7 @@ import main.api.response.*;
 import main.model.*;
 import main.repository.*;
 import main.service.PostService;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -275,11 +278,25 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<ResponseApi> moderationOfPost(ModerationOfPostRequest moderationOfPostRequest,
+    public ResponseEntity<ResponseApi> moderationOfPost(ModerationOfPostRequest moderationRequest,
                                                         Principal principal) {
+        User user = userRepository.findUserByEmail(principal.getName()).orElseThrow(
+                () -> new UsernameNotFoundException("User is not found"));
 
+        if (user.getIsModerator() == 1){
+            long postId = moderationRequest.getPostId();
+            String requestDecision = moderationRequest.getDecision();
+            Post postById = postRepository.findById(postId).orElseThrow();
 
-        return ResponseEntity.ok(new CheckResponse(true));
+            String decision = requestDecision.equals("accept") ? "ACCEPTED" : "DECLINED";
+
+            postRepository.updateModeratorField(postById, user.getId(), decision);
+
+            return ResponseEntity.ok(new CheckResponse(true));
+        }
+
+        return ResponseEntity.ok(new CheckResponse(false));
+
     }
 
     @Override

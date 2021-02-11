@@ -5,35 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1ad53d45-512a-4ce8-a777-6901c2c4f76f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_coobird_thumbnailator_0_4_13.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Diploma.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Diploma.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/Dc/tx/Ug/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/M8/FY/GW/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/NK/nX/rb/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/RW/pI/aH/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/Ul/9X/X0/IMG_3913.PNG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/hd/X7/CB/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/m9/9V/EY/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/profileImages/9l/7H/Wb/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/profileImages/Qi/mn/WW/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/profileImages/ZC/sL/CY/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/profileImages/ab/S4/Un/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/path/profileImages/nk/FA/VK/free-best-hd-wallpapers-mac-wallpapers-tablet-4k-best-wallpaper-ever-samsung-wallpapers-wallpaper-for-iphone-download-pictures-1920x1080.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/controller/ApiGeneralController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/controller/ApiGeneralController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/UserProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/UserProfileService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/impl/UserProfileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/impl/UserProfileServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/main/controller/ApiGeneralController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/controller/ApiGeneralController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/main/service/UserProfileService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/UserProfileService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/api/request/ModerationOfPostRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/api/request/ModerationOfPostRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/repository/PostRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/repository/PostRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/impl/PostServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/impl/PostServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/api/request/ModerationOfPostRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/api/request/ModerationOfPostRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/repository/PostRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/repository/PostRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/service/impl/PostServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/impl/PostServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/main/service/impl/UserProfileServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/impl/UserProfileServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/upload/EX/3e/Ri/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/upload/IW/xI/pt/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/upload/JL/8V/eh/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/upload/usersPhoto/TT/uW/Nh/IMG_3912.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/upload/usersPhoto/fX/7I/PU/IMG_3912.JPG" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
