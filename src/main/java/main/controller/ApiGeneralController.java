@@ -3,11 +3,11 @@ package main.controller;
 import com.sun.istack.NotNull;
 import main.api.request.CommentRequest;
 import main.api.request.EditProfileRequest;
-import main.api.request.EditProfileWithPhotoRequest;
 import main.api.request.ModerationOfPostRequest;
 import main.api.response.InitResponse;
 import main.api.response.ResponseApi;
 import main.service.CommentService;
+import main.service.ImageService;
 import main.service.PostService;
 import main.service.TagService;
 import main.service.impl.SettingsServiceImpl;
@@ -37,18 +37,21 @@ public class ApiGeneralController {
     private final UserProfileServiceImpl editUserProfileService;
     @Autowired
     private final CommentService commentService;
+    @Autowired
+    private final ImageService imageService;
 
     public ApiGeneralController(InitResponse initResponse,
                                 SettingsServiceImpl settingsService,
                                 TagService tagService,
                                 PostService postService,
-                                UserProfileServiceImpl editUserProfileService, CommentService commentService) {
+                                UserProfileServiceImpl editUserProfileService, CommentService commentService, ImageService imageService) {
         this.initResponse = initResponse;
         this.settingsService = settingsService;
         this.tagService = tagService;
         this.postService = postService;
         this.editUserProfileService = editUserProfileService;
         this.commentService = commentService;
+        this.imageService = imageService;
     }
 
     @GetMapping("/init")
@@ -116,9 +119,8 @@ public class ApiGeneralController {
 
     @PostMapping(value = "/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    private Object uploadImage(@RequestParam("image") MultipartFile image) throws Exception {
-        return editUserProfileService.uploadImage(image, "upload");
+    private ResponseEntity<ResponseApi> uploadImage(@RequestParam("image") MultipartFile image) throws Exception {
+        return imageService.uploadImage(image, "upload");
     }
-
 
 }

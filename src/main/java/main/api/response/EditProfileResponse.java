@@ -19,6 +19,4 @@ public class EditProfileResponse implements ResponseApi{
     @JsonProperty("errors")
     private HashMap<String, String> errors;
 
-
-
 }

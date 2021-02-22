@@ -22,6 +22,4 @@ public interface UserProfileService {
 
     ResponseEntity<ResponseApi> getAllStatistic();
 
-    Object uploadImage(MultipartFile image, String folder) throws Exception;
-
 }

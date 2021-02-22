@@ -1,6 +1,6 @@
 out/
 .idea/
 target/
-src/main/static/upload/
+upload/
 
 *.war

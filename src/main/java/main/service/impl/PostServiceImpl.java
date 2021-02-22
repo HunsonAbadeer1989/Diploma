@@ -175,14 +175,9 @@ public class PostServiceImpl implements PostService {
         User user = userRepository.findUserByEmail(principal.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
-        Map<String, String> errors = new HashMap<>();
+        Map<String, String> errors = inspectAddPostRequest(addPostRequest);
 
-        if (addPostRequest.getTitle().length() < 3) {
-            errors.put("title", "Title isn't set");
-            if (addPostRequest.getText().length() < 50) {
-                errors.put("text", "Text is too short");
-                return ResponseEntity.ok(new AddPostResponse(false, errors));
-            }
+        if(!errors.isEmpty()){
             return ResponseEntity.ok(new AddPostResponse(false, errors));
         }
 
@@ -335,4 +330,15 @@ public class PostServiceImpl implements PostService {
         return dateOfPost;
     }
 
+    private Map<String, String> inspectAddPostRequest(AddPostRequest addPostRequest){
+        Map<String, String> errors = new HashMap<>();
+
+        if (addPostRequest.getTitle().length() < 3) {
+            errors.put("title", "Title isn't set");
+        }
+        if (addPostRequest.getText().length() < 50) {
+            errors.put("text", "Text is too short");
+        }
+        return errors;
+    }
 }

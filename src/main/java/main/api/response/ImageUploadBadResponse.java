@@ -9,7 +9,7 @@ import java.util.HashMap;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImageResponse implements ResponseApi{
+public class ImageUploadBadResponse implements ResponseApi{
 
     private boolean result;
     private HashMap<String, String> errors;

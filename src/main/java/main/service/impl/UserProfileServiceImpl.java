@@ -2,7 +2,6 @@ package main.service.impl;
 
 import main.api.request.EditProfileRequest;
 import main.api.response.EditProfileResponse;
-import main.api.response.ImageResponse;
 import main.api.response.ResponseApi;
 import main.api.response.StatisticResponse;
 import main.config.SecurityConfig;
@@ -10,9 +9,8 @@ import main.model.Post;
 import main.model.User;
 import main.repository.PostRepository;
 import main.repository.UserRepository;
+import main.service.ImageService;
 import main.service.UserProfileService;
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
@@ -41,15 +32,18 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     private final SecurityConfig securityConfig;
 
+    private final ImageService imageService;
+
     @Value("${spring.servlet.multipart.max-file-size}")
     private int MAX_FILE_SIZE;
 
     public UserProfileServiceImpl(UserRepository userRepository,
                                   PostRepository postRepository,
-                                  SecurityConfig securityConfig) {
+                                  SecurityConfig securityConfig, ImageService imageService) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.securityConfig = securityConfig;
+        this.imageService = imageService;
     }
 
     @Override
@@ -115,7 +109,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             PasswordEncoder encoder = securityConfig.passwordEncoder();
             String encodePassword = encoder.encode(password);
 
-            String filePath = saveUserPhoto(photo, "userPhoto");
+            String filePath = imageService.uploadUserPhoto(photo, "upload/profile_photo");
             userRepository.editPasswordAndPhoto(name, email, encodePassword, userEmail, filePath);
 
         } else {
@@ -160,86 +154,6 @@ public class UserProfileServiceImpl implements UserProfileService {
                 viewsCount,
                 firstPublication);
         return new ResponseEntity<>(statisticResponse, HttpStatus.OK);
-    }
-
-    @Override
-    public Object uploadImage(MultipartFile image, String folder) throws Exception {
-
-        ImageResponse imageResponse = new ImageResponse();
-
-        if (image == null ||
-                image.getOriginalFilename() == null ||
-                image.getOriginalFilename().isEmpty()) {
-            imageResponse.setResult(false);
-
-            HashMap<String, String> errors = new HashMap<>(1);
-            errors.put("image", "Download image error");
-
-            imageResponse.setErrors(errors);
-            return new ResponseEntity<>(imageResponse, HttpStatus.BAD_REQUEST);
-        }
-
-        String resultFilename = image.getOriginalFilename();
-
-        if (!(resultFilename.split("\\.")[1].equalsIgnoreCase("jpg") ||
-                resultFilename.split("\\.")[1].equalsIgnoreCase("png"))) {
-            imageResponse.setResult(false);
-
-            HashMap<String, String> errors = new HashMap<>(1);
-            errors.put("image", "Wrong extension of upload file");
-
-            imageResponse.setErrors(errors);
-            return new ResponseEntity<>(imageResponse, HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            if (image.getSize() < MAX_FILE_SIZE) {
-
-                String[] uuidPath = UUID.randomUUID().toString().split("\\-");
-
-                String folderPath = folder.equals("userPhoto") ? "/upload/profile_photo" : "/upload";
-
-                String resultPath = "/" + folderPath + "/" + uuidPath[0] + "/" + uuidPath[1] + "/" + uuidPath[2];
-
-                Path uploadDir = Paths.get("src/main/resources/static" + resultPath);
-                if (!Files.exists(uploadDir)) {
-                    Files.createDirectories(uploadDir);
-                }
-
-                Path filePath = uploadDir.resolve(resultFilename);
-
-                if (folder.equals("userPhoto")) { // If user profile photo
-
-                    File resizeFile = new File(String.valueOf(filePath));
-                    simpleResizeImage(image, resizeFile);
-                }
-
-                Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-
-                return new ResponseEntity<>(resultPath + "/" + resultFilename, HttpStatus.OK);
-
-            } else {
-                imageResponse = new ImageResponse();
-                imageResponse.setResult(false);
-
-                HashMap<String, String> errors = new HashMap<>(1);
-                errors.put("image", "Size of image more than 5Mb");
-
-                imageResponse.setErrors(errors);
-                return new ResponseEntity<>(imageResponse, HttpStatus.OK);
-            }
-        } catch (
-                IOException exception) {
-            imageResponse = new ImageResponse();
-            imageResponse.setResult(false);
-
-            HashMap<String, String> errors = new HashMap<>(1);
-            errors.put("image", "Download image error");
-
-            imageResponse.setErrors(errors);
-            return new ResponseEntity<>(imageResponse, HttpStatus.OK);
-        }
     }
 
     private StatisticResponse createMyStatisticResponse(List<Post> posts) {
@@ -294,23 +208,6 @@ public class UserProfileServiceImpl implements UserProfileService {
         }
 
         return editResponse.isResult();
-    }
-
-    protected String saveUserPhoto(MultipartFile photo, String folder) throws Exception {
-        Object pathToPhoto = uploadImage(photo, folder);
-        if (pathToPhoto.getClass().getName().equals("java.lang.String")) {
-            return (String) pathToPhoto;
-        } else {
-            return null;
-        }
-    }
-
-    public void simpleResizeImage(MultipartFile photo, File resizeFile) throws Exception {
-        Thumbnails.of(photo.getInputStream())
-                .crop(Positions.CENTER_LEFT)
-                .size(36, 36)
-                .keepAspectRatio(true)
-                .toFile(resizeFile);
     }
 
 }
