@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class EditProfileRequest implements RequestApi{
 
     private Byte removePhoto;

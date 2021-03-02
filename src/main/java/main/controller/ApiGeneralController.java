@@ -120,7 +120,7 @@ public class ApiGeneralController {
     @PostMapping(value = "/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     private ResponseEntity<ResponseApi> uploadImage(@RequestParam("image") MultipartFile image) throws Exception {
-        return imageService.uploadImage(image, "upload");
+        return imageService.uploadImage(image);
     }
 
 }

@@ -37,6 +37,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Value("${spring.servlet.multipart.max-file-size}")
     private int MAX_FILE_SIZE;
 
+
     public UserProfileServiceImpl(UserRepository userRepository,
                                   PostRepository postRepository,
                                   SecurityConfig securityConfig, ImageService imageService) {
@@ -109,7 +110,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             PasswordEncoder encoder = securityConfig.passwordEncoder();
             String encodePassword = encoder.encode(password);
 
-            String filePath = imageService.uploadUserPhoto(photo, "upload/profile_photo");
+            String filePath = imageService.uploadUserPhoto(photo);
             userRepository.editPasswordAndPhoto(name, email, encodePassword, userEmail, filePath);
 
         } else {

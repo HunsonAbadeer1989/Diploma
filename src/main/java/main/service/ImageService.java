@@ -6,8 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageService {
 
-    ResponseEntity<ResponseApi> uploadImage(MultipartFile image, String path) throws Exception;
+    ResponseEntity<ResponseApi> uploadImage(MultipartFile image) throws Exception;
 
-    String uploadUserPhoto(MultipartFile photo, String path) throws Exception;
+    String uploadUserPhoto(MultipartFile photo) throws Exception;
 
 }

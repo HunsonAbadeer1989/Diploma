@@ -5,25 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1ad53d45-512a-4ce8-a777-6901c2c4f76f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/main/config/MvcConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/main/service/ImageService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/main/service/impl/ImageServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_02_02_2021,_11_58_[Default_Changelist]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_02_02_2021__11_58__Default_Changelist_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/api/response/EditProfileResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/api/response/EditProfileResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/api/response/ImageResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/api/response/ImageUploadBadResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/api/request/EditProfileRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/api/request/EditProfileRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/config/MvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/config/MvcConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main/controller/ApiGeneralController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/controller/ApiGeneralController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/UserProfileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/UserProfileService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/impl/PostServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/impl/PostServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/ImageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/ImageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/impl/ImageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/impl/ImageServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main/service/impl/UserProfileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/impl/UserProfileServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/main/api/response/ImageResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/api/request/EditProfileRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/api/request/EditProfileRequest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/main/controller/ApiGeneralController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/controller/ApiGeneralController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/main/service/UserProfileService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/UserProfileService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/main/service/impl/PostServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/impl/PostServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/main/service/impl/UserProfileServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/impl/UserProfileServiceImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

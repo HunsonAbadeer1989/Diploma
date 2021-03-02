@@ -26,8 +26,20 @@ public class ImageServiceImpl implements ImageService {
     @Value("${spring.servlet.multipart.max-file-size}")
     private int MAX_FILE_SIZE;
 
+    @Value("${path_for_resources.images}")
+    private String PATH_FOR_IMAGES;
+
+    @Value("${path_for_resources.profile_photos}")
+    private String PATH_FOR_PROFILE_PHOTO;
+
+    @Value("${path_for_resources.images_path}")
+    private String WORK_IMG_PATH;
+
+    @Value("${path_for_resources.profile_img_path}")
+    private String WORK_PROFILE_IMG_PATH;
+
     @Override
-    public ResponseEntity<ResponseApi> uploadImage(MultipartFile image, String path) throws Exception {
+    public ResponseEntity<ResponseApi> uploadImage(MultipartFile image) throws Exception {
 
         ImageUploadBadResponse uploadResponse = new ImageUploadBadResponse();
 
@@ -42,9 +54,11 @@ public class ImageServiceImpl implements ImageService {
 
                 String[] uuidPath = UUID.randomUUID().toString().split("\\-");
 
-                String resultPath = path + "/" + uuidPath[0] + "/" + uuidPath[1] + "/" + uuidPath[2];
+                String tempPath =  File.separator + uuidPath[0] + File.separator + uuidPath[1] + File.separator + uuidPath[2];
 
-                Path uploadDir = Paths.get(resultPath);
+                String workPath = WORK_IMG_PATH + tempPath;
+
+                Path uploadDir = Paths.get(PATH_FOR_IMAGES + tempPath);
 
                 if (!Files.exists(uploadDir)) {
                     Files.createDirectories(uploadDir);
@@ -54,7 +68,7 @@ public class ImageServiceImpl implements ImageService {
 
                 Files.copy(image.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
 
-                return new ResponseEntity(imagePath.toString(), HttpStatus.OK);
+                return new ResponseEntity(File.separator + workPath + File.separator + image.getOriginalFilename(), HttpStatus.OK);
 
             } else {
                 uploadResponse = new ImageUploadBadResponse();
@@ -80,7 +94,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public String uploadUserPhoto(MultipartFile image, String imagePath) throws Exception {
+    public String uploadUserPhoto(MultipartFile image) throws Exception {
 
         boolean chekImage = chekImage(image);
 
@@ -88,19 +102,19 @@ public class ImageServiceImpl implements ImageService {
             return null;
         }
 
-        Path uploadDir = Paths.get(imagePath);
+        Path uploadDir = Paths.get(PATH_FOR_PROFILE_PHOTO);
 
         if (!Files.exists(uploadDir)) {
             Files.createDirectories(uploadDir);
         }
 
-        Path uploadPath = uploadDir.resolve(image.getOriginalFilename());
+        Path uploadPath =  uploadDir.resolve(image.getOriginalFilename());
         File resizeFile = new File(String.valueOf(uploadPath));
         simpleResizeImage(image, resizeFile);
 
         Files.copy(image.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
 
-        return uploadPath.toString();
+        return File.separator + WORK_PROFILE_IMG_PATH + File.separator + image.getOriginalFilename();
     }
 
     private boolean chekImage(MultipartFile image) {
