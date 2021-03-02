@@ -42,8 +42,9 @@ public class PostListResponse implements ResponseApi {
             this.id = post.getId();
             this.timestamp = post.getPublicationTime().atZone(ZoneId.systemDefault()).toEpochSecond();
             this.title = post.getTitle();
-            this.announce = post.getPostText().length() < ANNOUNCE ? post.getPostText()
-                    : post.getPostText().substring(0, ANNOUNCE) + "...";
+            String postText = post.getPostText().replaceAll("<.*?>", "") ;
+            this.announce = postText.length() < ANNOUNCE ? postText
+                    : postText.substring(0, ANNOUNCE) + "...";
             this.likeCount = (int) post.getVotes().stream().filter(v -> v.getValue() == 1).count();
             this.dislikeCount = (int) post.getVotes().stream().filter(v -> v.getValue() == -1).count();
             this.commentCount = post.getComments().size();
