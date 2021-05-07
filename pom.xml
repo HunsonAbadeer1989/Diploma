@@ -4,6 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <distributionManagement>
+        <repository>
+            <id>myrepository</id>
+            <url>file:.mvn/maven-repo</url>
+        </repository>
+    </distributionManagement>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -15,10 +22,10 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <java.version>11</java.version>
+<!--        <java.version>11</java.version>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+<!--        <maven.compiler.source>${java.version}</maven.compiler.source>-->
+<!--        <maven.compiler.target>${java.version}</maven.compiler.target>-->
     </properties>
 
     <dependencies>
@@ -124,6 +131,13 @@
                     <target>11</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>3.0.3</version>
+            </plugin>
+
         </plugins>
     </build>
 </project>
