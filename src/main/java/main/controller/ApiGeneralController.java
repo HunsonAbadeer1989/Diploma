@@ -4,12 +4,10 @@ import com.sun.istack.NotNull;
 import main.api.request.CommentRequest;
 import main.api.request.EditProfileRequest;
 import main.api.request.ModerationOfPostRequest;
+import main.api.request.SettingsRequest;
 import main.api.response.InitResponse;
 import main.api.response.ResponseApi;
-import main.service.CommentService;
-import main.service.ImageService;
-import main.service.PostService;
-import main.service.TagService;
+import main.service.*;
 import main.service.impl.SettingsServiceImpl;
 import main.service.impl.UserProfileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +26,13 @@ public class ApiGeneralController {
     @Autowired
     private final InitResponse initResponse;
     @Autowired
-    private final SettingsServiceImpl settingsService;
+    private final SettingService settingsService;
     @Autowired
     private final TagService tagService;
     @Autowired
     private final PostService postService;
     @Autowired
-    private final UserProfileServiceImpl editUserProfileService;
+    private final UserProfileService editUserProfileService;
     @Autowired
     private final CommentService commentService;
     @Autowired
@@ -62,6 +60,11 @@ public class ApiGeneralController {
     @GetMapping("/settings")
     private ResponseEntity<ResponseApi> settings() {
         return settingsService.getGlobalSettings();
+    }
+
+    @PutMapping("/settings")
+    private ResponseEntity updateSettings(@RequestBody SettingsRequest settingsRequest){
+        return settingsService.putGlobalSettings(settingsRequest);
     }
 
     @GetMapping(value = ("/tag"), params = {"query"})

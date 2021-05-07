@@ -7,6 +7,20 @@
     <list default="true" id="1ad53d45-512a-4ce8-a777-6901c2c4f76f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/controller/ApiAuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/controller/ApiAuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/controller/ApiGeneralController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/controller/ApiGeneralController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/controller/ApiPostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/controller/ApiPostController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/repository/GlobalSettingsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/repository/GlobalSettingsRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/repository/PostRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/repository/PostRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/SettingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/SettingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/impl/SettingsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/impl/SettingsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/controller/ApiAuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/controller/ApiAuthController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/controller/ApiGeneralController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/controller/ApiGeneralController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/controller/ApiPostController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/controller/ApiPostController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/repository/GlobalSettingsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/repository/GlobalSettingsRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/repository/PostRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/repository/PostRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/service/SettingService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/SettingService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/service/impl/SettingsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/service/impl/SettingsServiceImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

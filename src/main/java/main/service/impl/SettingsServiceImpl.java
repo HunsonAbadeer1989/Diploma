@@ -1,5 +1,6 @@
 package main.service.impl;
 
+import main.api.request.SettingsRequest;
 import main.api.response.GlobalSettingsResponse;
 import main.api.response.ResponseApi;
 import main.model.GlobalSettings;
@@ -28,5 +29,10 @@ public class SettingsServiceImpl implements SettingService {
         GlobalSettingsResponse responseSettings = new GlobalSettingsResponse()
                                                             .settingsToSettingsResponse(globalSettingsList);
         return new ResponseEntity<ResponseApi>(responseSettings, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ResponseApi> putGlobalSettings(SettingsRequest settingsRequest) {
+        return null;
     }
 }

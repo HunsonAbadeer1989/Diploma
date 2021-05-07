@@ -126,8 +126,8 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
             "WHERE p.publication_time < NOW() " +
             "AND p.is_active = 1 " +
             "AND p.moderation_status = 'ACCEPTED' " +
-            "AND (p.text LIKE %?1% OR title LIKE %?1%)", nativeQuery = true)
-    Page<Post> getPostsByQuery(String query, Pageable page);
+            "AND (p.text LIKE %:query% OR title LIKE %:query%)", nativeQuery = true)
+    Page<Post> getPostsByQuery(@Param("query") String query, Pageable page);
 
     @Query(value = "SELECT p.* FROM posts p " +
             "JOIN users u ON u.id = p.user_id " +
