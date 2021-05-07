@@ -33,6 +33,14 @@ public class SettingsServiceImpl implements SettingService {
 
     @Override
     public ResponseEntity<ResponseApi> putGlobalSettings(SettingsRequest settingsRequest) {
-        return null;
+        String MULTIUSER_MODE = settingsRequest.isMultiUserMode() ? "YES" : "NO";
+        String POST_PREMODERATION = settingsRequest.isPostPreModeration() ? "YES" : "NO";
+        String STATISTICS_IS_PUBLIC = settingsRequest.isStatisticsIsPublic() ? "YES" : "NO";
+
+        globalSettingsRepository.putSettings("MULTIUSER_MODE", MULTIUSER_MODE);
+        globalSettingsRepository.putSettings("POST_PREMODERATION", POST_PREMODERATION);
+        globalSettingsRepository.putSettings("STATISTICS_IS_PUBLIC", STATISTICS_IS_PUBLIC);
+
+        return new ResponseEntity(true, HttpStatus.OK);
     }
 }

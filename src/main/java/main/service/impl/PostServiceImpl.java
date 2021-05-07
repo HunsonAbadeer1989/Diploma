@@ -1,7 +1,5 @@
 package main.service.impl;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.sun.istack.NotNull;
 import main.api.request.AddPostRequest;
 import main.api.request.ModerationOfPostRequest;
@@ -11,7 +9,6 @@ import main.api.response.*;
 import main.model.*;
 import main.repository.*;
 import main.service.PostService;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.sql.Date;
 import java.time.Instant;

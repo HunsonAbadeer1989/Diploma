@@ -20,4 +20,11 @@ public interface GlobalSettingsRepository extends JpaRepository<GlobalSettings, 
     void updateGlobalSetting(@Param("code") String code,
                              @Param("value") String value);
 
+    @Modifying
+    @Transactional
+    @Query(
+            value = "UPDATE global_settings s SET s.value = :value WHERE s.code = :code",
+            nativeQuery = true)
+    void putSettings(@Param("code") String code, @Param("value") String value);
+
 }
