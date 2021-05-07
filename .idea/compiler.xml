@@ -10,7 +10,7 @@
         <module name="Diploma" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="11">
       <module name="Diploma" target="11" />
     </bytecodeTargetLevel>
   </component>
