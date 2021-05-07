@@ -10,4 +10,8 @@ public class NotFoundOrBadRequestResponse implements ResponseApi {
     public NotFoundOrBadRequestResponse(String message) {
         this.message = message;
     }
+
+    public NotFoundOrBadRequestResponse() {
+
+    }
 }

@@ -52,7 +52,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ResponseEntity<ResponseApi> getPostById(long id) {
-        Post post = postRepository.findById(id).orElseThrow();
+        Post post = postRepository.findById(id).orElseThrow(() -> new main.exception.NotFoundOrBadRequestResponse());
         if (post == null) {
             return new ResponseEntity<>(new NotFoundOrBadRequestResponse("Document not found"), HttpStatus.NOT_FOUND);
         }
