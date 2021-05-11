@@ -22,6 +22,6 @@ insert into post_comments (post_id, user_id, time, text, parent_id)
 
 insert into tags (name) values ('lookAtMe'), ('Java'), ('skillbox');
 
-insert into tag2post (post_id, tag_id) values (1, 1), (2, 3), (4, 2);
+--insert into tag2post (post_id, tag_id) values (1, 1), (2, 3), (4, 2);
 
 

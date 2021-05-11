@@ -4,3 +4,5 @@ target/
 upload/
 
 *.war
+
+system.properties

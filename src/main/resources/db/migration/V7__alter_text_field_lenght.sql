@@ -1,1 +1,0 @@
-ALTER TABLE posts MODIFY text varchar(10000);

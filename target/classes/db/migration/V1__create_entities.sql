@@ -26,7 +26,7 @@ create table posts (
     id bigint not null auto_increment,
     is_active integer,
     moderation_status varchar(255),
-    moderator_id bigint, text varchar(255),
+    moderator_id bigint, text varchar(1000),
     publication_time datetime,
     title varchar(255),
     user_id bigint,

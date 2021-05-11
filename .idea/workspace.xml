@@ -5,11 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1ad53d45-512a-4ce8-a777-6901c2c4f76f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/system.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Diploma.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Diploma.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_flywaydb_flyway_core_6_0_8.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/system.properities" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__create_entities.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__create_entities.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V4__create_test_entities.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V4__create_test_entities.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V5__more_post_entities.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V5__more_post_entities.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V7__alter_text_field_lenght.sql" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/db/migration/V1__create_entities.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/db/migration/V1__create_entities.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/db/migration/V4__create_test_entities.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/db/migration/V4__create_test_entities.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/db/migration/V5__more_post_entities.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/db/migration/V5__more_post_entities.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,10 +72,10 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.runner" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
     <property name="settings.editor.splitter.proportion" value="0.23853211" />
   </component>
   <component name="ReaderModeSettings">
@@ -84,8 +94,8 @@
       <recent name="$PROJECT_DIR$/src/main/resources/db/migration" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main" />
       <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src/main" />
       <recent name="$PROJECT_DIR$/src/main/resources/static/img" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -94,6 +104,9 @@
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <envs>
+        <env name="CLEARDB_DATABASE_URL" value="mysql://baa2780f9f0732:d4587069@eu-cdbr-west-01.cleardb.com/heroku_1247ab9a29c312d?useUnicode=true&amp;characterEncoding=utf-8&amp;reconnect=true" />
+      </envs>
       <option name="MAIN_CLASS_NAME" value="main.Main" />
       <module name="Diploma" />
       <extension name="coverage">

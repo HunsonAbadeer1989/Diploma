@@ -29,11 +29,11 @@ insert into post_comments (post_id, user_id, time, text, parent_id)
             (SELECT id FROM users WHERE name like 'ivan'),
             NOW(), 'Not that again!', 5);
 
-insert into post_votes (user_id, post_id, time, value)
-    values (1, 3, NOW(), 1),
-            (2, 3, NOW(), 1),
-            (3, 3, NOW(), 1),
-            (4, 3, NOW(), 1),
-            (1, 4, NOW(), -1),
-            (2, 5, NOW(), 1),
-            (3, 5, NOW(), 1);
+--insert into post_votes (user_id, post_id, time, value)
+--    values (1, 3, NOW(), 1),
+--            (2, 3, NOW(), 1),
+--            (3, 3, NOW(), 1),
+--            (4, 3, NOW(), 1),
+--            (1, 4, NOW(), -1),
+--            (2, 5, NOW(), 1),
+--            (3, 5, NOW(), 1);

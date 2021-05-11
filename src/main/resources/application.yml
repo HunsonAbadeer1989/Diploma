@@ -1,11 +1,9 @@
 spring:
-#  resources:
-#        static-locations: classpath:/static
   datasource:
-    url: jdbc:mysql://localhost:3306/blog_db?useUnicode=true&
-      useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:${CLEARDB_DATABASE_URL:mysql://localhost:3306/blog_db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC}
     username: root
     password: testtest
+    server.port: ${PORT:8080}
   jpa:
     hibernate.ddl-auto: none
     generate-ddl: true
@@ -18,7 +16,7 @@ spring:
 
 spring.h2.console.enable: true
 spring.flyway.enabled: true
-spring.jpa.database-platform: org.hibernate.dialect.MySQL5Dialect
+spring.jpa.database-platform: org.hibernate.dialect.MySQL8Dialect
 
 captcha:
   delete_timeout: 60 # min
