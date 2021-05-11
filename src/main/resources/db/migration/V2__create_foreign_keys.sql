@@ -1,3 +1,8 @@
+alter table posts
+    add constraint FK5lidm6cqbc7u4xhqpxm898qme
+     foreign key (user_id)
+      references users (id);
+
 alter table tag2post
     add constraint UK_fqpcdbwqxmlqrvdogqjqmps1d
     unique (post_id);
@@ -35,3 +40,4 @@ alter table post_votes
     add constraint FK9q09ho9p8fmo6rcysnci8rocc
     foreign key (user_id)
     references users (id);
+

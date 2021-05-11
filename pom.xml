@@ -17,15 +17,17 @@
         <version>2.2.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>org.example</groupId>
     <artifactId>SpringApplication</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-<!--        <java.version>11</java.version>-->
+        <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<!--        <maven.compiler.source>${java.version}</maven.compiler.source>-->
-<!--        <maven.compiler.target>${java.version}</maven.compiler.target>-->
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -117,6 +119,14 @@
                         <goals>
                             <goal>build-info</goal>
                         </goals>
+                        <configuration>
+                            <additionalProperties>
+                                <encoding.source>${project.build.sourceEncoding}</encoding.source>
+                                <encoding.reporting>${project.reporting.outputEncoding}</encoding.reporting>
+                                <java.source>${maven.compiler.source}</java.source>
+                                <java.target>${maven.compiler.target}</java.target>
+                            </additionalProperties>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
@@ -131,10 +141,6 @@
                     <source>11</source>
                     <target>11</target>
                 </configuration>
-                <!--                <configuration>-->
-<!--                    <source>11</source>-->
-<!--                    <target>11</target>-->
-<!--                </configuration>-->
             </plugin>
 
             <plugin>
