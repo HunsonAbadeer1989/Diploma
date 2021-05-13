@@ -51,11 +51,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<ResponseApi> getPostById(long id) {
+    public ResponseEntity<ResponseApi> getPostById(long id, Principal principal) {
+        User user = userRepository.findUserByEmail(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+
         Post post = postRepository.findById(id).orElseThrow(main.exception.NotFoundOrBadRequestResponse::new);
         if (post == null) {
             return new ResponseEntity<>(new NotFoundOrBadRequestResponse("Document not found"), HttpStatus.NOT_FOUND);
         }
+
+        if(user.getIsModerator() != 1 || post.getUser().getId() != user.getId()){
+            int newViewCount = post.getViewCount();
+            postRepository.updatePostViewCount(post.getId(), ++newViewCount);
+        }
+
         ResponseApi responseApi = new PostResponse(post);
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
     }

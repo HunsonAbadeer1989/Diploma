@@ -23,7 +23,7 @@ public interface PostService {
 
     ResponseEntity<ResponseApi> getMyPosts(int offset, int limit, String status, Principal principal);
 
-    ResponseEntity<ResponseApi> getPostById(long id);
+    ResponseEntity<ResponseApi> getPostById(long id, Principal principal);
 
     ResponseEntity<ResponseApi> addPost(AddPostRequest addPostRequest, Principal principal);
 
@@ -34,5 +34,7 @@ public interface PostService {
     ResponseEntity<ResponseApi> moderationOfPost(ModerationOfPostRequest moderationOfPostRequest, Principal principal);
 
     ResponseEntity<ResponseApi> calendarOfPosts(Integer year);
+
+
 
 }

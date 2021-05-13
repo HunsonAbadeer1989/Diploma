@@ -40,7 +40,8 @@ public class PostResponse implements ResponseApi {
         text = post.getPostText();
         likeCount = (int) post.getVotes().stream().filter(v -> v.getValue() == 1).count();
         dislikeCount = (int) post.getVotes().stream().filter(v -> v.getValue() == -1).count();
-        viewCount = post.getViewCount();
+        int count = post.getViewCount();
+        viewCount = ++count;
         comments = new LinkedList<>();
         for (PostComment pc : post.getComments()) {
             long commentAuthorId = pc.getUser().getId();

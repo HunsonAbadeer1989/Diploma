@@ -216,4 +216,11 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
     void updateModeratorField(@Param("post_id")Post postById,
                               @Param("moderator_id") long id,
                               @Param("status") String status);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE posts AS p " +
+            "SET p.view_count = :view_count " +
+            "WHERE p.id = :post_id ", nativeQuery = true)
+    void updatePostViewCount(@Param("post_id")Long id, @Param("view_count") int i);
 }

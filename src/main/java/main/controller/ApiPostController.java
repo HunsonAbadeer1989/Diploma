@@ -21,8 +21,8 @@ public class ApiPostController {
     private PostService postService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseApi> getPostById(@PathVariable(value = "id") long id) {
-        return postService.getPostById(id);
+    public ResponseEntity<ResponseApi> getPostById(@PathVariable(value = "id") long id, Principal principal) {
+        return postService.getPostById(id, principal);
     }
 
     @GetMapping(value = "/byTag")
