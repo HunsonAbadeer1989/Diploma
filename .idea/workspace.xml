@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1ad53d45-512a-4ce8-a777-6901c2c4f76f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/service/impl/PostServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/service/impl/PostServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +55,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="extract.method.default.visibility" value="private" />
@@ -92,7 +93,7 @@
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <envs>
-        <env name="CLEARDB_DATABASE_URL" value="mysql://bae83764f81f43:51b6ae5a@eu-cdbr-west-01.cleardb.com/heroku_62772ac0d314c04?useUnicode=true&amp;characterEncoding=utf-8&amp;reconnect=true" />
+        <env name="CLEARDB_DATABASE_URL" value="mysql://baa2780f9f0732:d4587069@eu-cdbr-west-01.cleardb.com/heroku_1247ab9a29c312d?useUnicode=true&amp;characterEncoding=utf-8&amp;reconnect=true" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="main.Main" />
       <module name="Diploma" />
