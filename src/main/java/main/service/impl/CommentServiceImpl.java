@@ -24,11 +24,8 @@ import java.util.HashMap;
 @Service
 public class CommentServiceImpl implements CommentService {
 
-    @Autowired
     private final PostRepository postRepository;
-    @Autowired
     private final CommentRepository commentRepository;
-    @Autowired
     private final UserRepository userRepository;
 
     public CommentServiceImpl(PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository) {

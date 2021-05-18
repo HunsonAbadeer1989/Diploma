@@ -9,7 +9,6 @@ import main.api.response.*;
 import main.model.*;
 import main.repository.*;
 import main.service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,19 +26,10 @@ import java.util.*;
 @Service
 public class PostServiceImpl implements PostService {
 
-    @Autowired
     private final PostRepository postRepository;
-
-    @Autowired
     private final UserRepository userRepository;
-
-    @Autowired
     private final TagRepository tagRepository;
-
-    @Autowired
     private final TagToPostRepository tagToPostRepository;
-
-    @Autowired
     private final PostVotesRepository postVotesRepository;
 
     public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, TagRepository tagRepository, TagToPostRepository tagToPostRepository, PostVotesRepository postVotesRepository) {
@@ -57,15 +47,16 @@ public class PostServiceImpl implements PostService {
         if (post == null) {
             return new ResponseEntity<>(new NotFoundOrBadRequestResponse("Document not found"), HttpStatus.NOT_FOUND);
         }
-
         if(principal != null) {
             User user = userRepository.findUserByEmail(principal.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
-            if (user.getIsModerator() != 1 || post.getUser().getId() != user.getId()) {
-                int newViewCount = post.getViewCount();
-                postRepository.updatePostViewCount(post.getId(), ++newViewCount);
+            if (user.getIsModerator() != 1 && post.getUser().getId() != user.getId()) {
+                postRepository.addViewToPost(post.getId());
             }
+        }
+        else {
+            postRepository.addViewToPost(post.getId());
         }
 
         ResponseApi responseApi = new PostResponse(post);

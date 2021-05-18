@@ -1,7 +1,9 @@
 out/
-.idea/
+.idea
 target/
 upload/
+.mvn
+.DS_Store
 
 *.war
 

@@ -27,11 +27,8 @@ import java.util.List;
 public class UserProfileServiceImpl implements UserProfileService {
 
     private final UserRepository userRepository;
-
     private final PostRepository postRepository;
-
     private final SecurityConfig securityConfig;
-
     private final ImageService imageService;
 
     @Value("${spring.servlet.multipart.max-file-size}")

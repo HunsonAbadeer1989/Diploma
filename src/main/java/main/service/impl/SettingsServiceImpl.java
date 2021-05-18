@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 public class SettingsServiceImpl implements SettingService {
 
-    @Autowired
     private final GlobalSettingsRepository globalSettingsRepository;
 
     public SettingsServiceImpl(GlobalSettingsRepository globalSettingsRepository) {

@@ -67,7 +67,9 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
     int countAllPostsOnSite();
 
     @Query(value = "SELECT * FROM posts AS p " +
-            "WHERE DATEDIFF(p.publication_time, ?1) = 0 AND p.is_active = 1 " +
+            "WHERE DATEDIFF(p.publication_time, ?1) = 0 " +
+            "AND p.is_active = 1 " +
+            "AND p.moderation_status = 'ACCEPTED' " +
             "ORDER BY p.publication_time DESC", nativeQuery = true)
         // SEARCH BY DATE
     Page<Post> getPostsByDate(String date, Pageable page);
@@ -94,7 +96,10 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
         // GET POSTS BY TAG
     List<Post> getPostsByTag(int offset, int limit, String tag);
 
-    @Query(value = "SELECT * FROM posts AS p WHERE YEAR(p.publication_time) = ? ", nativeQuery = true)
+    @Query(value = "SELECT * FROM posts AS p " +
+            "WHERE YEAR(p.publication_time) = ? " +
+            "AND p.is_active = 1  " +
+            "AND p.moderation_status = 'ACCEPTED' ", nativeQuery = true)
     List<Post> calendarOfPosts(Integer year);
 
     @Query(value = "SELECT DISTINCT YEAR(p.publication_time) AS post_year " +
@@ -220,7 +225,8 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
     @Modifying
     @Transactional
     @Query(value = "UPDATE posts AS p " +
-            "SET p.view_count = :view_count " +
+            "SET p.view_count = p.view_count + 1 " +
             "WHERE p.id = :post_id ", nativeQuery = true)
-    void updatePostViewCount(@Param("post_id")Long id, @Param("view_count") int i);
+    void addViewToPost(@Param("post_id")Long id);
+
 }
