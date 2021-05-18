@@ -134,7 +134,7 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
             "AND (p.text LIKE %:query% OR title LIKE %:query%)", nativeQuery = true)
     Page<Post> getPostsByQuery(@Param("query") String query, Pageable page);
 
-    @Query(value = "SELECT p.* FROM posts p " +
+    @Query(value = "SELECT * FROM posts p " +
             "JOIN users u ON u.id = p.user_id " +
             "WHERE u.email = :email " +
             "AND p.is_active = 0 " +
@@ -142,9 +142,9 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
             "ORDER BY p.publication_time DESC", nativeQuery = true)
     Page<Post> getMyInactivePosts(@Param("email") String email, Pageable pageable);
 
-    @Query(value = "SELECT p.* FROM posts p " +
-            "JOIN users u ON u.id = p.user_id " +
-            "WHERE u.email = :email " +
+    @Query(value = "SELECT * FROM posts p " +
+            "JOIN users ur ON ur.id = p.user_id " +
+            "WHERE ur.email = :email " +
             "AND p.is_active = 1 " +
             "AND p.moderation_status = :status " +
             "AND p.publication_time < NOW() " +

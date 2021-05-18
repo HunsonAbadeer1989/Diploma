@@ -142,8 +142,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ResponseEntity<ResponseApi> getMyPosts(int offset, int limit, String status, Principal principal) {
-        Pageable pageable = PageRequest.of(offset, limit);
-        Page<Post> pageMyPostsResponse = null;
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Page<Post> pageMyPostsResponse = Page.empty();
 
         User user = userRepository.findByEmail(principal.getName());
 
@@ -162,10 +162,9 @@ public class PostServiceImpl implements PostService {
                 break;
         }
 
-        if (pageMyPostsResponse == null) {
+        if (pageMyPostsResponse.isEmpty()) {
             return ResponseEntity.ok(new PostListResponse(0, new ArrayList<>()));
         }
-
         return createMyPostsResponse(pageMyPostsResponse);
     }
 
