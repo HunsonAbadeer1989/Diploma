@@ -190,7 +190,8 @@ public class PostServiceImpl implements PostService {
 
         for (Tag tag : tagRequest.getTags()) {
             tagRepository.save(tag);
-            tagToPostRepository.insertTag2Post(addedPost.getId(), tag.getId());
+            Tag tagByName = tagRepository.findByName(tag.getName());
+            tagToPostRepository.insertTag2Post(addedPost.getId(), tagByName.getId());
         }
 
         return ResponseEntity.ok(new AddPostResponse(true));

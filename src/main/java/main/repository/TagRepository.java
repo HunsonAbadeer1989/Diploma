@@ -41,7 +41,7 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
             "AND tag_id = ?", nativeQuery = true)
     Integer getTagCountByTagId(long id);
 
-    @Query(value = "SELECT DISTINCT t.* FROM tags AS t " +
+    @Query(value = "SELECT DISTINCT * FROM tags AS t " +
             "INNER JOIN tag2post t2p ON t.id = t2p.tag_id " +
             "INNER JOIN posts p ON p.id = t2p.post_id " +
             "AND p.is_active = 1 " +
@@ -51,4 +51,5 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
     List<Tag> getAllTagsListSortedByIdDesc();
 
 
+    Tag findByName(String name);
 }
