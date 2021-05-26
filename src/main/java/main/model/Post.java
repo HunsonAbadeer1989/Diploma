@@ -54,11 +54,9 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<PostComment> comments;
 
-    @ManyToMany
-    @JoinTable(name = "tag2post",
-            joinColumns = {@JoinColumn(name = "post_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
-    private Set<TagToPost> tagsToPost;
+    @ManyToMany(mappedBy = "posts", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    private Set<Tag> tagsToPost;
 
     @OneToMany(mappedBy = "post")
     private List<PostVotes> votes;

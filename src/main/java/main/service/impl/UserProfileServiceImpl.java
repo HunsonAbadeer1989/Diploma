@@ -77,6 +77,11 @@ public class UserProfileServiceImpl implements UserProfileService {
                     userRepository.editNameEmailAndPhoto(name, email, "", userEmail);
                 }
             }
+            else {
+                if(removePhoto != null && removePhoto == 1){
+                    userRepository.editNameEmailAndPhoto(name, email, "", userEmail);
+                }
+            }
 
         } else {
             editResponse.setResult(false);
@@ -103,9 +108,14 @@ public class UserProfileServiceImpl implements UserProfileService {
             }
 
             String userEmail = principal.getName();
+            String encodePassword;
 
-            PasswordEncoder encoder = securityConfig.passwordEncoder();
-            String encodePassword = encoder.encode(password);
+            if (password != null) {
+                PasswordEncoder encoder = securityConfig.passwordEncoder();
+                encodePassword = encoder.encode(password);
+            } else {
+                encodePassword = userRepository.findByEmail(userEmail).getPassword();
+            }
 
             String filePath = imageService.uploadUserPhoto(photo);
             userRepository.editPasswordAndPhoto(name, email, encodePassword, userEmail, filePath);

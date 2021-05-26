@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.sql.Date;
@@ -44,9 +45,7 @@ public class PostServiceImpl implements PostService {
     public ResponseEntity<ResponseApi> getPostById(long id, Principal principal) {
 
         Post post = postRepository.findById(id).orElseThrow(main.exception.NotFoundOrBadRequestResponse::new);
-        if (post == null) {
-            return new ResponseEntity<>(new NotFoundOrBadRequestResponse("Document not found"), HttpStatus.NOT_FOUND);
-        }
+
         if(principal != null) {
             User user = userRepository.findUserByEmail(principal.getName())
                     .orElseThrow(() -> new UsernameNotFoundException("user not found"));
@@ -169,6 +168,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<ResponseApi> addPost(AddPostRequest addPostRequest, Principal principal) {
         User user = userRepository.findUserByEmail(principal.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
@@ -186,12 +186,14 @@ public class PostServiceImpl implements PostService {
 
         Post addedPost = postRepository.save(post);
 
-        TagRequest tagRequest = new TagRequest(addPostRequest.getTags());
+        for (String tag : addPostRequest.getTags()) {
+            Tag tagToPost = tagRepository.findByName(tag);
 
-        for (Tag tag : tagRequest.getTags()) {
-            tagRepository.save(tag);
-            Tag tagByName = tagRepository.findByName(tag.getName());
-            tagToPostRepository.insertTag2Post(addedPost.getId(), tagByName.getId());
+            if (tagToPost == null) {
+                tagToPost = tagRepository.save(new Tag(tag));
+            }
+
+            tagToPostRepository.insertTag2Post(addedPost.getId(), tagToPost.getId());
         }
 
         return ResponseEntity.ok(new AddPostResponse(true));
@@ -232,8 +234,14 @@ public class PostServiceImpl implements PostService {
         TagRequest tagRequest = new TagRequest(updatePostRequest.getTags());
 
         for (Tag tag : tagRequest.getTags()) {
-            tagRepository.save(tag);
-            tagToPostRepository.insertTag2Post(post.getId(), tag.getId());
+
+            Tag tagToPost = tagRepository.findByName(tag.getName());
+
+            if (tagToPost == null) {
+                tagToPost = tagRepository.save(new Tag(tag.getName()));
+            }
+
+            tagToPostRepository.insertTag2Post(post.getId(), tagToPost.getId());
         }
 
         return ResponseEntity.ok(new AddPostResponse(true));

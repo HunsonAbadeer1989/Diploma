@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import main.model.Post;
 import main.model.PostAuthor;
 import main.model.PostComment;
-import main.model.TagToPost;
+import main.model.Tag;
 
 import java.time.ZoneId;
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ public class PostResponse implements ResponseApi {
     private int dislikeCount;
     private int viewCount;
     private List<Comment> comments;
-    private Set<String> tagsList;
+    private Set<String> tags;
 
 
     public PostResponse(Post post) {
@@ -57,10 +57,10 @@ public class PostResponse implements ResponseApi {
                             commentAuthorPhoto));
             comments.add(comment);
         }
-        tagsList = new TreeSet<>();
-        for(TagToPost t : post.getTagsToPost()){
-            String tagName = t.getTag().getName();
-            tagsList.add(tagName);
+        tags = new TreeSet<>();
+        for(Tag t : post.getTagsToPost()){
+            String tagName = t.getName();
+            tags.add(tagName);
         }
     }
 

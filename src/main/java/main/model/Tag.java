@@ -20,7 +20,7 @@ public class Tag {
     @NonNull
     private String name;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(
             name = "tag2post",
             joinColumns = {@JoinColumn(name = "tag_id")},

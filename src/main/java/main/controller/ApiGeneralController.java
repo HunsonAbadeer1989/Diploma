@@ -93,7 +93,7 @@ public class ApiGeneralController {
     private ResponseEntity<ResponseApi> editMyProfileWithPhoto(@RequestParam("photo") MultipartFile photo,
                                                                @RequestParam("name") String name,
                                                                @RequestParam("email") String email,
-                                                               @RequestParam("password") String password,
+                                                               @RequestParam(value = "password", required = false) String password,
                                                                Principal principal) throws Exception {
         return editUserProfileService.editMyProfileWithPhoto(photo, name, email, password, principal);
     }

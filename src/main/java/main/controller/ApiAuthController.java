@@ -76,7 +76,7 @@ public class ApiAuthController {
     @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<ResponseApi> logout(HttpServletRequest httpServletRequest) {
         SecurityContextHolder.clearContext();
-        return new ResponseEntity(new CheckResponse(true), HttpStatus.OK);
+        return new ResponseEntity<>(new CheckResponse(true), HttpStatus.OK);
     }
 
 

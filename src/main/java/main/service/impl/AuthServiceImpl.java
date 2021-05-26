@@ -83,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseEntity<ResponseApi> check(Principal principal){
+    public ResponseEntity<ResponseApi> check(Principal principal) {
         if (principal == null) {
             return ResponseEntity.ok(new LoginResponse());
         }

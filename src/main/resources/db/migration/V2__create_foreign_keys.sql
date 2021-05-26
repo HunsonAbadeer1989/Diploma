@@ -4,19 +4,6 @@ alter table posts
       references users (id);
 
 alter table tag2post
-    add constraint UK_fqpcdbwqxmlqrvdogqjqmps1d
-    unique (post_id);
-
-alter table tag2post
-    add constraint UK_ondhsmgldxky27q8l3q40m1cr
-    unique (tag_id);
-
-alter table tag2post
-    add constraint FKpjoedhh4h917xf25el3odq20i
-    foreign key (post_id)
-    references posts (id);
-
-alter table tag2post
     add constraint FKjou6suf2w810t2u3l96uasw3r
     foreign key (tag_id)
     references tags (id);
