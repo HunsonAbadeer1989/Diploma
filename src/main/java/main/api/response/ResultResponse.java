@@ -11,7 +11,7 @@ import java.util.HashMap;
 @Data
 @RequiredArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class EditProfileResponse implements ResponseApi{
+public class ResultResponse implements ResponseApi{
 
     @NonNull
     private boolean result;

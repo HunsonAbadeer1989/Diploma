@@ -3,10 +3,7 @@ package main.service.impl;
 import main.api.request.ChangePasswordRequest;
 import main.api.request.LoginRequest;
 import main.api.request.RegisterRequest;
-import main.api.response.LoginResponse;
-import main.api.response.RegisterResponse;
-import main.api.response.ResponseApi;
-import main.api.response.UserLoginResponse;
+import main.api.response.*;
 import main.config.SecurityConfig;
 import main.model.CaptchaCode;
 import main.repository.CaptchaRepository;
@@ -14,8 +11,11 @@ import main.repository.PostRepository;
 import main.repository.UserRepository;
 import main.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,14 +24,22 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.DispatcherServlet;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+    @Value("${spring.mail.username}")
+    private String EMAIL_ADRESS;
 
     @Autowired
     private UserRepository userRepository;
@@ -47,8 +55,14 @@ public class AuthServiceImpl implements AuthService {
 
     public final AuthenticationManager authenticationManager;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager) {
+    public final JavaMailSender mailSender;
+
+    public final HttpServletRequest servletRequest;
+
+    public AuthServiceImpl(AuthenticationManager authenticationManager, JavaMailSender mailSender, HttpServletRequest servletRequest, ServletContext servletContext, DispatcherServlet dispatcherServlet, ServletContext servletContext1, HttpServletRequest servletRequest1) {
         this.authenticationManager = authenticationManager;
+        this.mailSender = mailSender;
+        this.servletRequest = servletRequest1;
     }
 
 
@@ -74,11 +88,51 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<ResponseApi> restorePassword(String email) {
-        return null;
+        main.model.User user = userRepository.findByEmail(email);
+        if(user == null) {
+            return ResponseEntity.ok(new CheckResponse(false));
+        }
+
+        String code = UUID.randomUUID().toString().replaceAll("-", "");
+        String linkToCode = "/login/change-password/" + code;
+
+        userRepository.updateUserCode(user.getEmail(), code);
+        return sendEmail(email, linkToCode);
+    }
+
+    private ResponseEntity<ResponseApi> sendEmail(String email, String linkToCode) {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper messageHelper;
+
+        StringBuilder rootUrl = new StringBuilder();
+        rootUrl.append(servletRequest.getScheme())
+                .append("://")
+                .append(servletRequest.getServerName())
+                .append(":")
+                .append(servletRequest.getServerPort());
+        String htmlMsg = "To restore your password go to <a href=\"" + rootUrl + linkToCode + "\"><u>link<u/></a>";
+
+        try {
+            messageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+            mimeMessage.setContent(htmlMsg, "text/html");
+            messageHelper.setFrom(EMAIL_ADRESS);
+            messageHelper.setTo(email);
+            messageHelper.setSubject("Restore password");
+        }
+        catch(MessagingException ex){
+            ex.printStackTrace();
+            return ResponseEntity.ok(new CheckResponse(false));
+
+        }
+
+        mailSender.send(mimeMessage);
+        return ResponseEntity.ok(new CheckResponse(true));
     }
 
     @Override
     public ResponseEntity<ResponseApi> changePassword(ChangePasswordRequest changePasswordRequest) {
+        ResultResponse response = new ResultResponse(false);
+
         return null;
     }
 

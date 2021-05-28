@@ -1,7 +1,7 @@
 package main.service.impl;
 
 import main.api.request.EditProfileRequest;
-import main.api.response.EditProfileResponse;
+import main.api.response.ResultResponse;
 import main.api.response.ResponseApi;
 import main.api.response.StatisticResponse;
 import main.config.SecurityConfig;
@@ -48,7 +48,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     public ResponseEntity<ResponseApi> editMyProfile(EditProfileRequest editRequest,
                                                      Principal principal) {
 
-        EditProfileResponse editResponse = new EditProfileResponse(true);
+        ResultResponse editResponse = new ResultResponse(true);
         HashMap<String, String> errors = new HashMap<>();
         editResponse.setErrors(errors);
 
@@ -98,7 +98,7 @@ public class UserProfileServiceImpl implements UserProfileService {
                                                               String password,
                                                               Principal principal) throws Exception {
 
-        EditProfileResponse editResponse = new EditProfileResponse(true);
+        ResultResponse editResponse = new ResultResponse(true);
         HashMap<String, String> errors = new HashMap<>();
         editResponse.setErrors(errors);
 
@@ -191,7 +191,7 @@ public class UserProfileServiceImpl implements UserProfileService {
                                         String email,
                                         String password,
                                         Principal principal,
-                                        EditProfileResponse editResponse) {
+                                        ResultResponse editResponse) {
 
         if (!(photo == null) && photo.getSize() > MAX_FILE_SIZE) {
             editResponse.setResult(false);

@@ -4,10 +4,9 @@ import com.sun.istack.NotNull;
 import main.api.request.ChangePasswordRequest;
 import main.api.request.LoginRequest;
 import main.api.request.RegisterRequest;
+import main.api.request.RestorePasswordRequest;
 import main.api.response.CheckResponse;
-import main.api.response.LoginResponse;
 import main.api.response.ResponseApi;
-import main.api.response.UserLoginResponse;
 import main.repository.UserRepository;
 import main.service.AuthService;
 import main.service.CaptchaService;
@@ -15,13 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,13 +45,14 @@ public class ApiAuthController {
         return authService.check(principal);
     }
 
-    @PostMapping(value = "/restore", params = {"email"})
-    public ResponseEntity<ResponseApi> restorePassword(@RequestParam String email) {
-        return authService.restorePassword(email);
+    @PostMapping(value = "/restore")
+    public ResponseEntity<ResponseApi> restorePassword(@RequestBody RestorePasswordRequest request) {
+        return authService.restorePassword(request.getEmail());
     }
 
     @PostMapping(value = "/password")
     public ResponseEntity<ResponseApi> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+
         return authService.changePassword(changePasswordRequest);
     }
 
