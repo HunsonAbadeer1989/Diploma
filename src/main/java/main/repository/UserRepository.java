@@ -78,4 +78,17 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "code = :code " +
             "WHERE email = :email", nativeQuery = true)
     void updateUserCode(@Param("email") String email, @Param("code") String code);
+
+    @Modifying
+    @Transactional
+    @Query(value="UPDATE users SET " +
+            "password = :password " +
+            "WHERE code = :code", nativeQuery = true)
+    void updatePassword(@Param("code") String code, @Param("password") String encodePassword);
+
+    @Modifying
+    @Transactional
+    @Query(value="UPDATE users SET " +
+            "code = null ", nativeQuery = true)
+    void clearAllCodes();
 }

@@ -4,6 +4,7 @@ import main.api.request.ChangePasswordRequest;
 import main.api.request.LoginRequest;
 import main.api.request.RegisterRequest;
 import main.api.response.*;
+import main.config.ScheduledConfig;
 import main.config.SecurityConfig;
 import main.model.CaptchaCode;
 import main.repository.CaptchaRepository;
@@ -24,11 +25,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -51,6 +50,9 @@ public class AuthServiceImpl implements AuthService {
     private SecurityConfig securityConfig;
 
     @Autowired
+    private ScheduledConfig scheduledConfig;
+
+    @Autowired
     private CaptchaRepository captchaRepository;
 
     public final AuthenticationManager authenticationManager;
@@ -59,12 +61,13 @@ public class AuthServiceImpl implements AuthService {
 
     public final HttpServletRequest servletRequest;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, JavaMailSender mailSender, HttpServletRequest servletRequest, ServletContext servletContext, DispatcherServlet dispatcherServlet, ServletContext servletContext1, HttpServletRequest servletRequest1) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager,
+                           JavaMailSender mailSender,
+                           HttpServletRequest servletRequest) {
         this.authenticationManager = authenticationManager;
         this.mailSender = mailSender;
-        this.servletRequest = servletRequest1;
+        this.servletRequest = servletRequest;
     }
-
 
     @Override
     public ResponseEntity<ResponseApi> loginUser(LoginRequest loginRequest) {
@@ -130,10 +133,41 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseEntity<ResponseApi> changePassword(ChangePasswordRequest changePasswordRequest) {
+    public ResponseEntity<ResponseApi> changePassword(ChangePasswordRequest chgPassRequest) {
         ResultResponse response = new ResultResponse(false);
+        HashMap<String, String> errors = new HashMap<>();
+        main.model.User user = userRepository.getUserByCode(chgPassRequest.getCode());
 
-        return null;
+        if(user == null){
+            errors.put("code", "Ссылка для восстановления пароля устарела.\n" +
+                    "\t<a href=\n" +
+                    "\t\\/auth/restore\\>Запросить ссылку снова</a>\"");
+        }
+
+        int MIN_PASS_LENGTH = 6;
+        if(chgPassRequest.getPassword().length() < MIN_PASS_LENGTH){
+            errors.put("password", "Пароль короче 6-ти символов");
+        }
+
+        if(!checkCaptchaAndSecretCaptcha(chgPassRequest.getCaptcha(), chgPassRequest.getCaptchaSecret())){
+            errors.put("captcha", "Код с картинки введен не верно");
+        }
+
+        if(errors.isEmpty()){
+            String encodePassword = encodePassword(chgPassRequest.getPassword());
+            userRepository.updatePassword(chgPassRequest.getCode(), encodePassword);
+            response.setResult(true);
+        }
+        else{
+            response.setResult(false);
+            response.setErrors(errors);
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    private boolean checkCaptchaAndSecretCaptcha(String captcha, String captchaSecret) {
+        CaptchaCode captchaBySecretCode = captchaRepository.getCaptchaBySecretCode(captchaSecret);
+        return captcha.equals(captchaBySecretCode.getCode());
     }
 
     @Override
@@ -220,14 +254,18 @@ public class AuthServiceImpl implements AuthService {
         main.model.User newUser = new main.model.User();
         newUser.setEmail(registerRequest.getEmail());
 
-        PasswordEncoder encoder = securityConfig.passwordEncoder();
-        String encodePassword = encoder.encode(registerRequest.getPassword());
+        String encodePassword = encodePassword(registerRequest.getPassword());
         newUser.setPassword(encodePassword);
         newUser.setName(registerRequest.getName());
         newUser.setRegTime(LocalDateTime.now());
         userRepository.save(newUser);
 
         return new RegisterResponse(true);
+    }
+
+    private String encodePassword(String password) {
+        PasswordEncoder encoder = securityConfig.passwordEncoder();
+        return encoder.encode(password);
     }
 
     private boolean checkEqualsCaptches(String captchaFromRequest, String captchaID) {
