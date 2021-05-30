@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -75,9 +74,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Transactional
     @Query(value ="UPDATE users SET " +
-            "code = :code " +
+            "code = :code, " +
+            "codeTime = :codeTime " +
             "WHERE email = :email", nativeQuery = true)
-    void updateUserCode(@Param("email") String email, @Param("code") String code);
+    void updateUserCode(@Param("email") String email, @Param("code") String code, @Param("codeTime") String codeTime);
 
     @Modifying
     @Transactional
@@ -89,6 +89,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Transactional
     @Query(value="UPDATE users SET " +
-            "code = null ", nativeQuery = true)
-    void clearAllCodes();
+            "code = null, " +
+            "codeTime = null " +
+            "WHERE codeTime < :codeTime ", nativeQuery = true)
+    void clearAllCodes(@Param("codeTime") String codeTime);
 }

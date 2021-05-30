@@ -99,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
         String code = UUID.randomUUID().toString().replaceAll("-", "");
         String linkToCode = "/login/change-password/" + code;
 
-        userRepository.updateUserCode(user.getEmail(), code);
+        userRepository.updateUserCode(user.getEmail(), code, LocalDateTime.now().toString());
         return sendEmail(email, linkToCode);
     }
 
@@ -125,7 +125,6 @@ public class AuthServiceImpl implements AuthService {
         catch(MessagingException ex){
             ex.printStackTrace();
             return ResponseEntity.ok(new CheckResponse(false));
-
         }
 
         mailSender.send(mimeMessage);
@@ -191,8 +190,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseEntity<ResponseApi> logout(HttpServletRequest httpServletRequest) {
-        return null;
+    public ResponseEntity<ResponseApi> logout() {
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.ok(new CheckResponse(true));
     }
 
     private LoginResponse getLoginResponse(String email) {

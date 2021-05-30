@@ -31,6 +31,8 @@ public class User {
     private String code;
     @Column
     private String photo;
+    @Column(name = "code_time")
+    private LocalDateTime codeTime;
 
     @OneToMany(mappedBy = "user")
     private List<PostComment> comments;

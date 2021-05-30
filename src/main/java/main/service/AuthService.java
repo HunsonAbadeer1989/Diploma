@@ -20,7 +20,7 @@ public interface AuthService {
 
     ResponseEntity<ResponseApi> registerUser(RegisterRequest registerRequest);
 
-    ResponseEntity<ResponseApi> logout(HttpServletRequest httpServletRequest);
+    ResponseEntity<ResponseApi> logout();
 
     ResponseEntity<ResponseApi> check(Principal principal);
 }
